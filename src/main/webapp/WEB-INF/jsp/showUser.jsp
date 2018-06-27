@@ -15,7 +15,7 @@
 <body>
     <c:if test="${!empty userList}">
         <c:forEach var="user" items="${userList}">
-            姓名：${user.userName} &nbsp;&nbsp;手机号：${user.userPhone} &nbsp;&nbsp;邮箱：${user.userEmail} &nbsp;&nbsp;<br>
+            id：${user.aid} &nbsp;&nbsp;psd：${user.password} &nbsp;&nbsp;<br>
         </c:forEach>
     </c:if>
 </body>

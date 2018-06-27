@@ -1,6 +1,7 @@
 package com.pro.ssm.dao;
 
 import com.pro.ssm.model.Admin;
+import org.springframework.stereotype.Service;
 
 public interface AdminMapper {
     /**
