@@ -24,5 +24,6 @@ hs_err_pid*
 
 
 .idea/
+web-ssm.iml
 target/
 src/main/resources/jdbc.properties
