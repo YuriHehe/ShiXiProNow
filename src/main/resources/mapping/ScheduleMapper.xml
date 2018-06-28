@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.pro.ssm.dao.ScheduleMapper" >
+  <resultMap id="BaseResultMap" type="com.pro.ssm.model.Schedule" >
+    <id column="clsid" property="clsid" jdbcType="INTEGER" />
+    <id column="start_week" property="startWeek" jdbcType="INTEGER" />
+    <id column="end_week" property="endWeek" jdbcType="INTEGER" />
+    <id column="day" property="day" jdbcType="INTEGER" />
+    <id column="start_session" property="startSession" jdbcType="INTEGER" />
+    <id column="end_session" property="endSession" jdbcType="INTEGER" />
+    <result column="address" property="address" jdbcType="CHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    clsid, start_week, end_week, day, start_session, end_session, address
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="com.pro.ssm.model.ScheduleKey" >
+    select 
+    <include refid="Base_Column_List" />
+    from schedule
+    where clsid = #{clsid,jdbcType=INTEGER}
+      and start_week = #{startWeek,jdbcType=INTEGER}
+      and end_week = #{endWeek,jdbcType=INTEGER}
+      and day = #{day,jdbcType=INTEGER}
+      and start_session = #{startSession,jdbcType=INTEGER}
+      and end_session = #{endSession,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="com.pro.ssm.model.ScheduleKey" >
+    delete from schedule
+    where clsid = #{clsid,jdbcType=INTEGER}
+      and start_week = #{startWeek,jdbcType=INTEGER}
+      and end_week = #{endWeek,jdbcType=INTEGER}
+      and day = #{day,jdbcType=INTEGER}
+      and start_session = #{startSession,jdbcType=INTEGER}
+      and end_session = #{endSession,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.pro.ssm.model.Schedule" >
+    insert into schedule (clsid, start_week, end_week, 
+      day, start_session, end_session, 
+      address)
+    values (#{clsid,jdbcType=INTEGER}, #{startWeek,jdbcType=INTEGER}, #{endWeek,jdbcType=INTEGER}, 
+      #{day,jdbcType=INTEGER}, #{startSession,jdbcType=INTEGER}, #{endSession,jdbcType=INTEGER}, 
+      #{address,jdbcType=CHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.pro.ssm.model.Schedule" >
+    insert into schedule
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="clsid != null" >
+        clsid,
+      </if>
+      <if test="startWeek != null" >
+        start_week,
+      </if>
+      <if test="endWeek != null" >
+        end_week,
+      </if>
+      <if test="day != null" >
+        day,
+      </if>
+      <if test="startSession != null" >
+        start_session,
+      </if>
+      <if test="endSession != null" >
+        end_session,
+      </if>
+      <if test="address != null" >
+        address,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="clsid != null" >
+        #{clsid,jdbcType=INTEGER},
+      </if>
+      <if test="startWeek != null" >
+        #{startWeek,jdbcType=INTEGER},
+      </if>
+      <if test="endWeek != null" >
+        #{endWeek,jdbcType=INTEGER},
+      </if>
+      <if test="day != null" >
+        #{day,jdbcType=INTEGER},
+      </if>
+      <if test="startSession != null" >
+        #{startSession,jdbcType=INTEGER},
+      </if>
+      <if test="endSession != null" >
+        #{endSession,jdbcType=INTEGER},
+      </if>
+      <if test="address != null" >
+        #{address,jdbcType=CHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.pro.ssm.model.Schedule" >
+    update schedule
+    <set >
+      <if test="address != null" >
+        address = #{address,jdbcType=CHAR},
+      </if>
+    </set>
+    where clsid = #{clsid,jdbcType=INTEGER}
+      and start_week = #{startWeek,jdbcType=INTEGER}
+      and end_week = #{endWeek,jdbcType=INTEGER}
+      and day = #{day,jdbcType=INTEGER}
+      and start_session = #{startSession,jdbcType=INTEGER}
+      and end_session = #{endSession,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.pro.ssm.model.Schedule" >
+    update schedule
+    set address = #{address,jdbcType=CHAR}
+    where clsid = #{clsid,jdbcType=INTEGER}
+      and start_week = #{startWeek,jdbcType=INTEGER}
+      and end_week = #{endWeek,jdbcType=INTEGER}
+      and day = #{day,jdbcType=INTEGER}
+      and start_session = #{startSession,jdbcType=INTEGER}
+      and end_session = #{endSession,jdbcType=INTEGER}
+  </update>
+</mapper>

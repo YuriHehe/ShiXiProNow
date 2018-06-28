@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.pro.ssm.dao.StudentMapper" >
+  <resultMap id="BaseResultMap" type="com.pro.ssm.model.Student" >
+    <id column="sid" property="sid" jdbcType="CHAR" />
+    <result column="did" property="did" jdbcType="INTEGER" />
+    <result column="password" property="password" jdbcType="CHAR" />
+    <result column="sname" property="sname" jdbcType="CHAR" />
+    <result column="grade" property="grade" jdbcType="INTEGER" />
+    <result column="start_year" property="startYear" jdbcType="INTEGER" />
+    <result column="sex" property="sex" jdbcType="CHAR" />
+    <result column="cls_name" property="clsName" jdbcType="CHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    sid, did, password, sname, grade, start_year, sex, cls_name
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from student
+    where sid = #{sid,jdbcType=CHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from student
+    where sid = #{sid,jdbcType=CHAR}
+  </delete>
+  <insert id="insert" parameterType="com.pro.ssm.model.Student" >
+    insert into student (sid, did, password, 
+      sname, grade, start_year, 
+      sex, cls_name)
+    values (#{sid,jdbcType=CHAR}, #{did,jdbcType=INTEGER}, #{password,jdbcType=CHAR}, 
+      #{sname,jdbcType=CHAR}, #{grade,jdbcType=INTEGER}, #{startYear,jdbcType=INTEGER}, 
+      #{sex,jdbcType=CHAR}, #{clsName,jdbcType=CHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.pro.ssm.model.Student" >
+    insert into student
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="sid != null" >
+        sid,
+      </if>
+      <if test="did != null" >
+        did,
+      </if>
+      <if test="password != null" >
+        password,
+      </if>
+      <if test="sname != null" >
+        sname,
+      </if>
+      <if test="grade != null" >
+        grade,
+      </if>
+      <if test="startYear != null" >
+        start_year,
+      </if>
+      <if test="sex != null" >
+        sex,
+      </if>
+      <if test="clsName != null" >
+        cls_name,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="sid != null" >
+        #{sid,jdbcType=CHAR},
+      </if>
+      <if test="did != null" >
+        #{did,jdbcType=INTEGER},
+      </if>
+      <if test="password != null" >
+        #{password,jdbcType=CHAR},
+      </if>
+      <if test="sname != null" >
+        #{sname,jdbcType=CHAR},
+      </if>
+      <if test="grade != null" >
+        #{grade,jdbcType=INTEGER},
+      </if>
+      <if test="startYear != null" >
+        #{startYear,jdbcType=INTEGER},
+      </if>
+      <if test="sex != null" >
+        #{sex,jdbcType=CHAR},
+      </if>
+      <if test="clsName != null" >
+        #{clsName,jdbcType=CHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.pro.ssm.model.Student" >
+    update student
+    <set >
+      <if test="did != null" >
+        did = #{did,jdbcType=INTEGER},
+      </if>
+      <if test="password != null" >
+        password = #{password,jdbcType=CHAR},
+      </if>
+      <if test="sname != null" >
+        sname = #{sname,jdbcType=CHAR},
+      </if>
+      <if test="grade != null" >
+        grade = #{grade,jdbcType=INTEGER},
+      </if>
+      <if test="startYear != null" >
+        start_year = #{startYear,jdbcType=INTEGER},
+      </if>
+      <if test="sex != null" >
+        sex = #{sex,jdbcType=CHAR},
+      </if>
+      <if test="clsName != null" >
+        cls_name = #{clsName,jdbcType=CHAR},
+      </if>
+    </set>
+    where sid = #{sid,jdbcType=CHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.pro.ssm.model.Student" >
+    update student
+    set did = #{did,jdbcType=INTEGER},
+      password = #{password,jdbcType=CHAR},
+      sname = #{sname,jdbcType=CHAR},
+      grade = #{grade,jdbcType=INTEGER},
+      start_year = #{startYear,jdbcType=INTEGER},
+      sex = #{sex,jdbcType=CHAR},
+      cls_name = #{clsName,jdbcType=CHAR}
+    where sid = #{sid,jdbcType=CHAR}
+  </update>
+</mapper>

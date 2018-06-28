@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.pro.ssm.dao.StuClsMapper" >
+  <resultMap id="BaseResultMap" type="com.pro.ssm.model.StuCls" >
+    <id column="clsid" property="clsid" jdbcType="INTEGER" />
+    <id column="sid" property="sid" jdbcType="CHAR" />
+    <result column="final_grade" property="finalGrade" jdbcType="DECIMAL" />
+    <result column="usual_grade" property="usualGrade" jdbcType="DECIMAL" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    clsid, sid, final_grade, usual_grade, create_time
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="com.pro.ssm.model.StuClsKey" >
+    select 
+    <include refid="Base_Column_List" />
+    from stu_cls
+    where clsid = #{clsid,jdbcType=INTEGER}
+      and sid = #{sid,jdbcType=CHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="com.pro.ssm.model.StuClsKey" >
+    delete from stu_cls
+    where clsid = #{clsid,jdbcType=INTEGER}
+      and sid = #{sid,jdbcType=CHAR}
+  </delete>
+  <insert id="insert" parameterType="com.pro.ssm.model.StuCls" >
+    insert into stu_cls (clsid, sid, final_grade, 
+      usual_grade, create_time)
+    values (#{clsid,jdbcType=INTEGER}, #{sid,jdbcType=CHAR}, #{finalGrade,jdbcType=DECIMAL}, 
+      #{usualGrade,jdbcType=DECIMAL}, #{createTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.pro.ssm.model.StuCls" >
+    insert into stu_cls
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="clsid != null" >
+        clsid,
+      </if>
+      <if test="sid != null" >
+        sid,
+      </if>
+      <if test="finalGrade != null" >
+        final_grade,
+      </if>
+      <if test="usualGrade != null" >
+        usual_grade,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="clsid != null" >
+        #{clsid,jdbcType=INTEGER},
+      </if>
+      <if test="sid != null" >
+        #{sid,jdbcType=CHAR},
+      </if>
+      <if test="finalGrade != null" >
+        #{finalGrade,jdbcType=DECIMAL},
+      </if>
+      <if test="usualGrade != null" >
+        #{usualGrade,jdbcType=DECIMAL},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.pro.ssm.model.StuCls" >
+    update stu_cls
+    <set >
+      <if test="finalGrade != null" >
+        final_grade = #{finalGrade,jdbcType=DECIMAL},
+      </if>
+      <if test="usualGrade != null" >
+        usual_grade = #{usualGrade,jdbcType=DECIMAL},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where clsid = #{clsid,jdbcType=INTEGER}
+      and sid = #{sid,jdbcType=CHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.pro.ssm.model.StuCls" >
+    update stu_cls
+    set final_grade = #{finalGrade,jdbcType=DECIMAL},
+      usual_grade = #{usualGrade,jdbcType=DECIMAL},
+      create_time = #{createTime,jdbcType=TIMESTAMP}
+    where clsid = #{clsid,jdbcType=INTEGER}
+      and sid = #{sid,jdbcType=CHAR}
+  </update>
+</mapper>

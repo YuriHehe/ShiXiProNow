@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.pro.ssm.dao.CourseMapper" >
+  <resultMap id="BaseResultMap" type="com.pro.ssm.model.Course" >
+    <id column="cid" property="cid" jdbcType="INTEGER" />
+    <result column="did" property="did" jdbcType="INTEGER" />
+    <result column="cname" property="cname" jdbcType="CHAR" />
+    <result column="credit" property="credit" jdbcType="DECIMAL" />
+    <result column="hour" property="hour" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    cid, did, cname, credit, hour
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from course
+    where cid = #{cid,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from course
+    where cid = #{cid,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.pro.ssm.model.Course" >
+    insert into course (cid, did, cname, 
+      credit, hour)
+    values (#{cid,jdbcType=INTEGER}, #{did,jdbcType=INTEGER}, #{cname,jdbcType=CHAR}, 
+      #{credit,jdbcType=DECIMAL}, #{hour,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="com.pro.ssm.model.Course" >
+    insert into course
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="cid != null" >
+        cid,
+      </if>
+      <if test="did != null" >
+        did,
+      </if>
+      <if test="cname != null" >
+        cname,
+      </if>
+      <if test="credit != null" >
+        credit,
+      </if>
+      <if test="hour != null" >
+        hour,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="cid != null" >
+        #{cid,jdbcType=INTEGER},
+      </if>
+      <if test="did != null" >
+        #{did,jdbcType=INTEGER},
+      </if>
+      <if test="cname != null" >
+        #{cname,jdbcType=CHAR},
+      </if>
+      <if test="credit != null" >
+        #{credit,jdbcType=DECIMAL},
+      </if>
+      <if test="hour != null" >
+        #{hour,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.pro.ssm.model.Course" >
+    update course
+    <set >
+      <if test="did != null" >
+        did = #{did,jdbcType=INTEGER},
+      </if>
+      <if test="cname != null" >
+        cname = #{cname,jdbcType=CHAR},
+      </if>
+      <if test="credit != null" >
+        credit = #{credit,jdbcType=DECIMAL},
+      </if>
+      <if test="hour != null" >
+        hour = #{hour,jdbcType=INTEGER},
+      </if>
+    </set>
+    where cid = #{cid,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.pro.ssm.model.Course" >
+    update course
+    set did = #{did,jdbcType=INTEGER},
+      cname = #{cname,jdbcType=CHAR},
+      credit = #{credit,jdbcType=DECIMAL},
+      hour = #{hour,jdbcType=INTEGER}
+    where cid = #{cid,jdbcType=INTEGER}
+  </update>
+</mapper>
