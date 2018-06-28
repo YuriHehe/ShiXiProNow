@@ -1,6 +1,9 @@
 package com.pro.ssm.dao;
 
 import com.pro.ssm.model.Course;
+import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 public interface CourseMapper {
     int deleteByPrimaryKey(Integer cid);
@@ -16,4 +19,8 @@ public interface CourseMapper {
     int updateByPrimaryKey(Course record);
 
     int selectNum();
+
+    List<Course> selectSome(@Param("start_id")int start_id, @Param("num")int num);
+
+    List<Course> selectBySearch(@Param("key")String key);
 }

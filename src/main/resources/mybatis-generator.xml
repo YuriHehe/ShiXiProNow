@@ -5,7 +5,7 @@
 <generatorConfiguration>
 
     <!-- 本地数据库驱动程序jar包的全路径 -->
-    <classPathEntry location="/home/wangweimin/.m2/repository/mysql/mysql-connector-java/5.1.29/mysql-connector-java-5.1.29.jar"/>
+    <classPathEntry location="C:\Users\YuriAlex\.m2\repository\mysql\mysql-connector-java\5.1.36\mysql-connector-java-5.1.36.jar"/>
 
     <context id="context" targetRuntime="MyBatis3">
         <commentGenerator>
@@ -14,7 +14,7 @@
         </commentGenerator>
 
         <!-- 数据库的相关配置 -->
-        <jdbcConnection driverClass="com.mysql.jdbc.Driver" connectionURL="jdbc:mysql://123.207.247.86/qiao_proj?useUnicode=true&amp;characterEncoding=utf-8&amp;zeroDateTimeBehavior=convertToNull" userId="qiao" password="qianggeqiang"/>
+        <jdbcConnection driverClass="com.mysql.jdbc.Driver" connectionURL="jdbc:mysql://106.15.231.4/qiao_proj?useUnicode=true&amp;characterEncoding=utf-8&amp;zeroDateTimeBehavior=convertToNull" userId="qiao" password="qianggeqiang"/>
 
         <javaTypeResolver>
             <property name="forceBigDecimals" value="false"/>
@@ -37,39 +37,11 @@
         </javaClientGenerator>
 
         <!-- 相关表的配置 -->
-        <table tableName="admin" enableCountByExample="false" enableDeleteByExample="false" enableSelectByExample="false"
-               enableUpdateByExample="false"/>
-
-        <!-- 相关表的配置 -->
         <table tableName="cls" enableCountByExample="false" enableDeleteByExample="false" enableSelectByExample="false"
                enableUpdateByExample="false"/>
 
         <!-- 相关表的配置 -->
-        <table tableName="course" enableCountByExample="false" enableDeleteByExample="false" enableSelectByExample="false"
-               enableUpdateByExample="false"/>
-
-        <!-- 相关表的配置 -->
-        <table tableName="departmet" enableCountByExample="false" enableDeleteByExample="false" enableSelectByExample="false"
-               enableUpdateByExample="false"/>
-
-        <!-- 相关表的配置 -->
-        <table tableName="message" enableCountByExample="false" enableDeleteByExample="false" enableSelectByExample="false"
-               enableUpdateByExample="false"/>
-
-        <!-- 相关表的配置 -->
-        <table tableName="schedule" enableCountByExample="false" enableDeleteByExample="false" enableSelectByExample="false"
-               enableUpdateByExample="false"/>
-
-        <!-- 相关表的配置 -->
-        <table tableName="stu_cls" enableCountByExample="false" enableDeleteByExample="false" enableSelectByExample="false"
-               enableUpdateByExample="false"/>
-
-        <!-- 相关表的配置 -->
-        <table tableName="student" enableCountByExample="false" enableDeleteByExample="false" enableSelectByExample="false"
-               enableUpdateByExample="false"/>
-
-        <!-- 相关表的配置 -->
-        <table tableName="teacher" enableCountByExample="false" enableDeleteByExample="false" enableSelectByExample="false"
+        <table tableName="available_cls" enableCountByExample="false" enableDeleteByExample="false" enableSelectByExample="false"
                enableUpdateByExample="false"/>
     </context>
 </generatorConfiguration>

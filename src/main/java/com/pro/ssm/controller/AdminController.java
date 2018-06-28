@@ -379,19 +379,42 @@ public class AdminController {
             return Msg.Error("课程不存在");
         }
     }
+
     @ResponseBody
     @RequestMapping(value = "/course/search",method = RequestMethod.POST)
     public Map<String,Object> searchCourse(HttpServletRequest request, Model model){
         return Msg.Unfinished();
     }
+
     @ResponseBody
     @RequestMapping(value = "/course/list",method = RequestMethod.GET)
     public Map<String,Object> listCourse(HttpServletRequest request, Model model){
         return Msg.Unfinished();
     }
+
     @ResponseBody
     @RequestMapping(value = "/course/info",method = RequestMethod.GET)
     public Map<String,Object> infoCourse(HttpServletRequest request, Model model){
+        return Msg.Unfinished();
+    }
+
+    @ResponseBody
+    @RequestMapping(value = "/class/add",method = RequestMethod.POST)
+    public Map<String,Object> addClass(HttpServletRequest request, Model model){
+        Cls cls = new Cls();
+        //
+        return Msg.Unfinished();
+    }
+
+    @ResponseBody
+    @RequestMapping(value = "/class/edit",method = RequestMethod.POST)
+    public Map<String,Object> editClass(HttpServletRequest request, Model model){
+        return Msg.Unfinished();
+    }
+
+    @ResponseBody
+    @RequestMapping(value = "/class/del",method = RequestMethod.POST)
+    public Map<String,Object> delClass(HttpServletRequest request, Model model){
         return Msg.Unfinished();
     }
 }
