@@ -16,4 +16,8 @@ public class DepartmentServiceImpl implements DepartmentService {
     public List<Departmet> selectAll() {
         return departmetDao.selectAll();
     }
+
+    public String getDname(int did) {
+        return departmetDao.selectByPrimaryKey(did).getDname();
+    }
 }

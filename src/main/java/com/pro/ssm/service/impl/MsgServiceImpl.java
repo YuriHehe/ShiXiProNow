@@ -15,7 +15,7 @@ public class MsgServiceImpl implements MsgService {
     @Resource
     MessageMapper msgDao;
 
-    public List<Message> selectUnReply(int num) {
+    public List<MessageWithBLOBs> selectUnReply(int num) {
         return msgDao.selectUnReply(num);
     }
 

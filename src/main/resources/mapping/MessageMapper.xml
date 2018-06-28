@@ -117,7 +117,7 @@
       reply_time = #{replyTime,jdbcType=TIMESTAMP}
     where msg_id = #{msgId,jdbcType=INTEGER}
   </update>
-  <select id="selectUnReply" resultType="com.pro.ssm.model.Message">
+  <select id="selectUnReply" resultType="com.pro.ssm.model.MessageWithBLOBs">
     select * from message where reply is null limit #{num}
   </select>
 </mapper>

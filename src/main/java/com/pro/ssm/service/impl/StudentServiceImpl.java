@@ -58,4 +58,8 @@ public class StudentServiceImpl implements StudentService {
     public List<Student> selectBySearch(String key) {
         return stuDao.selectBySearch(key);
     }
+
+    public String getSname(String sid) {
+        return stuDao.selectByPrimaryKey(sid).getSname();
+    }
 }

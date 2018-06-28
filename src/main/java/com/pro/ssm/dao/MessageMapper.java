@@ -21,5 +21,5 @@ public interface MessageMapper {
 
     int updateByPrimaryKey(Message record);
 
-    List<Message> selectUnReply(@Param("num")int num);
+    List<MessageWithBLOBs> selectUnReply(@Param("num")int num);
 }

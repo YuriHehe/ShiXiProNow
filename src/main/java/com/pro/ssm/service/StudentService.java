@@ -25,4 +25,6 @@ public interface StudentService {
     List<Student> selectSome(int start_id, int num);
 
     List<Student> selectBySearch(String key);
+
+    String getSname(String sid);
 }

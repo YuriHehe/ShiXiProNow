@@ -6,4 +6,6 @@ import java.util.List;
 
 public interface DepartmentService {
     List<Departmet> selectAll();
+
+    String getDname(int did);
 }

@@ -117,4 +117,13 @@
   <select id="selectNum" resultType="int">
     select count(*) from teacher
   </select>
+  <select id="selectAll" resultType="com.pro.ssm.model.Teacher">
+    select * from teacher
+  </select>
+  <select id="selectSome" resultType="com.pro.ssm.model.Teacher">
+    select * from teacher limit #{start_id},#{num}
+  </select>
+  <select id="selectBySearch" resultType="com.pro.ssm.model.Teacher">
+    select * from teacher where (tid like '%${key}%') or (tname like '%${key}%')
+  </select>
 </mapper>
