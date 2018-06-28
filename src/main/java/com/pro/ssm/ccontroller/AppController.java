@@ -1,24 +1,17 @@
 package com.pro.ssm.ccontroller;
 
-import com.pro.ssm.model.Admin;
-import com.pro.ssm.model.Student;
-import com.pro.ssm.model.Teacher;
-import com.pro.ssm.service.AdminService;
-import com.pro.ssm.service.StudentService;
-
-import com.pro.ssm.service.TeacherService;
+import com.pro.ssm.user.UserService;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.lang.reflect.Member;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 @Controller
@@ -27,12 +20,8 @@ public class AppController {
 
     private Logger log = Logger.getLogger(AppController.class);
 
-    @Resource(name = "adminService")
-    private AdminService adminService;
-    @Resource(name = "studentService")
-    private StudentService studentService;
-    @Resource(name = "teacherService")
-    private TeacherService teacherService;
+    @Resource
+    private UserService userService;
 
     @ResponseBody
     @RequestMapping(value = "/login", method = RequestMethod.POST)
@@ -40,69 +29,92 @@ public class AppController {
         String userid = request.getParameter("userid");
         String password = request.getParameter("password");
         String role = request.getParameter("role");
-        Map<String,Object> res = new HashMap<String, Object>();
-        res.put("code", 1000);
-        res.put("msg", "错误的用户类型");
-        res.put("data", null);
         //检查是否存在于数据库
-        do{
-            if(role.equals("admin")){
-                Admin tmp = adminService.getUserById(userid);
-                if(tmp == null){
-                    res.put("code", 1000);
-                    res.put("msg", "不存在用户名");
-                }
-                else if(password.equals(tmp.getPassword())){
-                    res.put("code", 200);
-                    res.put("msg", "成功");
-                }
-                else{
-                    res.put("code", 1000);
-                    res.put("msg", "错误的密码");
-                }
-                break;
-            }
-            if(role.equals("student")){
-                Student tmp = studentService.getUserById(userid);
-                if(tmp == null){
-                    res.put("code", 1000);
-                    res.put("msg", "不存在用户名");
-                }
-                else if(password.equals(tmp.getPassword())){
-                    res.put("code", 200);
-                    res.put("msg", "成功");
-                }
-                else{
-                    res.put("code", 1000);
-                    res.put("msg", "错误的密码");
-                }
-                break;
-            }
-            if(role.equals("teacher")){
-                Teacher tmp = teacherService.getUserById(userid);
-                if(tmp == null){
-                    res.put("code", 1000);
-                    res.put("msg", "不存在用户名");
-                }
-                else if(password.equals(tmp.getPassword())){
-                    res.put("code", 200);
-                    res.put("msg", "成功");
-                }
-                else{
-                    res.put("code", 1000);
-                    res.put("msg", "错误的密码");
-                }
-                break;
-            }
-        }while(false);
+        Map<String,Object> res = userService.userCheck(userid,password,role);
+        if(res.get("code").equals(200)){
+            request.getSession().setAttribute("login","1");
+            request.getSession().setAttribute("userid",userid);
+            request.getSession().setAttribute("role",role);
+        }
         return res;
     }
 
     @ResponseBody
     @RequestMapping(value = "/logout",method = RequestMethod.GET)
-    public Map<String,Object> logout(HttpServletRequest request, Model model){
+    public Map<String,Object> logout(HttpServletRequest request, Model model) {
+        request.getSession().removeAttribute("login");
+        request.getSession().removeAttribute("userid");
+        request.getSession().removeAttribute("role");
+        Map<String, Object> res = new HashMap<String, Object>();
+        res.put("code", 100);
+        res.put("msg", "未登录");
+        res.put("data", null);
+        return res;
+    }
+
+    @ResponseBody
+    @RequestMapping(value = "/change_password", method = RequestMethod.POST)
+    public Map<String,Object> changePassword(HttpServletRequest request, Model model){
+        Map<String,Object> res;
+        if(request.getSession().getAttribute("login").equals("1")){
+            String userid = request.getSession().getAttribute("userid").toString();
+            String role = request.getSession().getAttribute("role").toString();
+            String oldpsd = request.getParameter("old");
+            String newpsd = request.getParameter("new");
+            res = userService.change_password(userid,role,oldpsd,newpsd);
+        }
+        else{
+            res = new HashMap<String, Object>();
+            res.put("code", 100);
+            res.put("msg", "未登录");
+            res.put("data", null);
+        }
+        return res;
+    }
+
+    @ResponseBody
+    @RequestMapping(value = "/testChangePsd",method = RequestMethod.GET)
+    public Map<String,Object> testChangePsd(HttpServletRequest request, Model model){
+        Map<String,Object> res;
+        if(request.getSession().getAttribute("login").equals("1")){
+            String userid = request.getSession().getAttribute("userid").toString();
+            String role = request.getSession().getAttribute("role").toString();
+            String oldpsd = request.getParameter("old");
+            String newpsd = request.getParameter("new");
+            res = userService.change_password(userid,role,oldpsd,newpsd);
+        }
+        else{
+            res = new HashMap<String, Object>();
+            res.put("code", 100);
+            res.put("msg", "未登录");
+            res.put("data", null);
+        }
+        return res;
+    }
+
+    @ResponseBody
+    @RequestMapping(value = "/testLogin",method = RequestMethod.GET)
+    public Map<String,Object> testLogin(HttpServletRequest request, Model model){
         Map<String,Object> res = new HashMap<String, Object>();
-        res.put("msg","?");
+        request.getSession().setAttribute("login","1");
+        request.getSession().setAttribute("userid","admin");
+        request.getSession().setAttribute("role","admin");
+        return res;
+    }
+
+    @ResponseBody
+    @RequestMapping(value = "/showStatue",method = RequestMethod.GET)
+    public Map<String,Object> showStatue(HttpServletRequest request, Model model){
+        Map<String,Object> res = new HashMap<String, Object>();
+        if(request.getSession().getAttribute("login") == null){
+            res.put("userid", "null");
+            res.put("msg", "未登录");
+        }
+        else{
+            res.put("userid", (String)request.getSession().getAttribute("userid"));
+            res.put("login", (String)request.getSession().getAttribute("login"));
+            res.put("role", (String)request.getSession().getAttribute("role"));
+        }
         return res;
     }
 }

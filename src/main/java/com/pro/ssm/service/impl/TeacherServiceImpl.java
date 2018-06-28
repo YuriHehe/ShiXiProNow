@@ -16,4 +16,10 @@ public class TeacherServiceImpl implements TeacherService {
         Teacher tea = teacherDao.selectByPrimaryKey(userid);
         return tea;
     }
+
+    public void changePsd(String userId, String psd) {
+        Teacher tmp = teacherDao.selectByPrimaryKey(userId);
+        tmp.setPassword(psd);
+        teacherDao.updateByPrimaryKey(tmp);
+    }
 }

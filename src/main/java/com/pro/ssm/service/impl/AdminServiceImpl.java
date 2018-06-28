@@ -15,4 +15,10 @@ public class AdminServiceImpl implements AdminService {
     public Admin getUserById(String userId) {
         return adminDao.selectByPrimaryKey(userId);
     }
+
+    public void changePsd(String userId, String psd) {
+        Admin tmp = adminDao.selectByPrimaryKey(userId);
+        tmp.setPassword(psd);
+        adminDao.updateByPrimaryKey(tmp);
+    }
 }

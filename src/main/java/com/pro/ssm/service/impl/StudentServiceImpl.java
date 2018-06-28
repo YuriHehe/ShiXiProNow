@@ -16,4 +16,10 @@ public class StudentServiceImpl implements StudentService {
         Student stu = stuDao.selectByPrimaryKey(userid);
         return stu;
     }
+
+    public void changePsd(String userId, String psd) {
+        Student tmp = stuDao.selectByPrimaryKey(userId);
+        tmp.setPassword(psd);
+        stuDao.updateByPrimaryKey(tmp);
+    }
 }
