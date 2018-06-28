@@ -323,7 +323,8 @@ public class AdminController {
             res.put("tid",tea.getTid());
             res.put("name",tea.getTname());
             res.put("title",tea.getTitle());
-            res.put("department",tea.getDid());
+            String dname = departmentService.getDname(tea.getDid());
+            res.put("department",dname);
             res.put("contact",tea.getContact());
             res.put("address",tea.getAddress());
             return Msg.Success("成功获取老师信息",res);
