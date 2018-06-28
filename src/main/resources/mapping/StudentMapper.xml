@@ -125,4 +125,7 @@
       cls_name = #{clsName,jdbcType=CHAR}
     where sid = #{sid,jdbcType=CHAR}
   </update>
+  <select id="selectNum">
+    select count(*) from student
+  </select>
 </mapper>

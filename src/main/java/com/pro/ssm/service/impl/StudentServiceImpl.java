@@ -17,6 +17,17 @@ public class StudentServiceImpl implements StudentService {
         return stu;
     }
 
+    public boolean delUserById(String userid){
+        Student stu = stuDao.selectByPrimaryKey(userid);
+        if(stu == null){
+            return false;
+        }
+        else{
+            stuDao.deleteByPrimaryKey(userid);
+            return true;
+        }
+    }
+
     public void changePsd(String userId, String psd) {
         Student tmp = stuDao.selectByPrimaryKey(userId);
         tmp.setPassword(psd);
@@ -24,6 +35,18 @@ public class StudentServiceImpl implements StudentService {
     }
 
     public int countStudentNum() {
-        return 0;
+        return stuDao.selectNum();
+    }
+
+    public boolean updateUser(Student stu) {
+        if(stuDao.selectByPrimaryKey(stu.getSid()) == null)return false;
+        stuDao.updateByPrimaryKeySelective(stu);
+        return true;
+    }
+
+    public boolean insertUser(Student stu) {
+        if(stuDao.selectByPrimaryKey(stu.getSid()) != null)return false;
+        stuDao.insertSelective(stu);
+        return true;
     }
 }

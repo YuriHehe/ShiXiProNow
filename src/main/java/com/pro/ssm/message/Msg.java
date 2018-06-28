@@ -16,9 +16,7 @@ public class Msg {
     }
     static public Map<String,Object> Success(String msg, Map<String,Object> data){
         Map<String,Object> res = new HashMap<String, Object>();
-        Map<String,Object> res2 = new HashMap<String, Object>();
-        res2.putAll(data);
-        res.put("data", res2);
+        res.put("data", data);
         res.put("code", CodeType.SUCCESS);
         res.put("msg", msg);
         return res;
