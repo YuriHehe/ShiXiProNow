@@ -117,18 +117,4 @@ public class AppController {
         }
         return res;
     }
-
-    @RequestMapping("/set")
-    public String setSession(@RequestParam("browser") String a, @RequestParam("browser") String browser, HttpSession session){
-        log.info("查询所有用户信息");
-        session.setAttribute("name", "");
-        return "showUser";
-    }
-
-    @RequestMapping("/show")
-    public String showSession(HttpServletRequest request, HttpSession session){
-        log.info("查询所有用户信息");
-        List<Admin> userList = adminService.getAllUser();
-        return "showUser";
-    }
 }
