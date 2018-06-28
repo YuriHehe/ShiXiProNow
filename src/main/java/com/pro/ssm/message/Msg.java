@@ -14,7 +14,7 @@ public class Msg {
         res.put("data", null);
         return res;
     }
-    static public Map<String,Object> Success(String msg, Map<String,Object> data){
+    static public Map<String,Object> Success(String msg, Object data){
         Map<String,Object> res = new HashMap<String, Object>();
         res.put("data", data);
         res.put("code", CodeType.SUCCESS);

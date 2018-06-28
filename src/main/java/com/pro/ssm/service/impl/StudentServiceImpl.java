@@ -6,6 +6,7 @@ import com.pro.ssm.service.StudentService;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 @Service("studentService")
 public class StudentServiceImpl implements StudentService {
@@ -48,5 +49,13 @@ public class StudentServiceImpl implements StudentService {
         if(stuDao.selectByPrimaryKey(stu.getSid()) != null)return false;
         stuDao.insertSelective(stu);
         return true;
+    }
+
+    public List<Student> selectSome(int start_id, int num) {
+        return stuDao.selectSome(start_id,num);
+    }
+
+    public List<Student> selectBySearch(String key) {
+        return stuDao.selectBySearch(key);
     }
 }

@@ -55,4 +55,7 @@
     set dname = #{dname,jdbcType=CHAR}
     where did = #{did,jdbcType=INTEGER}
   </update>
+  <select id="selectAll" resultType="com.pro.ssm.model.Departmet">
+    select * from departmet
+  </select>
 </mapper>

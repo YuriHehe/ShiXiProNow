@@ -79,4 +79,7 @@
       tid = #{tid,jdbcType=CHAR}
     where clsid = #{clsid,jdbcType=INTEGER}
   </update>
+  <select id="selectNum" resultType="int">
+    select count(*) from cls
+  </select>
 </mapper>

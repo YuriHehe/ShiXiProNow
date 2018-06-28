@@ -125,7 +125,16 @@
       cls_name = #{clsName,jdbcType=CHAR}
     where sid = #{sid,jdbcType=CHAR}
   </update>
-  <select id="selectNum">
+  <select id="selectNum" resultType="int">
     select count(*) from student
+  </select>
+  <select id="selectAll"  resultType="com.pro.ssm.model.Student">
+    select * from student
+  </select>
+  <select id="selectSome" resultType="com.pro.ssm.model.Student">
+    select * from student limit #{start_id},#{num}
+  </select>
+  <select id="selectBySearch" resultType="com.pro.ssm.model.Student">
+    select * from student where (sid like '%${key}%') or (sname like '%${key}%');
   </select>
 </mapper>

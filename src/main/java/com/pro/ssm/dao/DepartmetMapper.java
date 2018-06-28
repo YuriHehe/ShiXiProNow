@@ -2,6 +2,8 @@ package com.pro.ssm.dao;
 
 import com.pro.ssm.model.Departmet;
 
+import java.util.List;
+
 public interface DepartmetMapper {
     int deleteByPrimaryKey(Integer did);
 
@@ -14,4 +16,6 @@ public interface DepartmetMapper {
     int updateByPrimaryKeySelective(Departmet record);
 
     int updateByPrimaryKey(Departmet record);
+
+    List<Departmet> selectAll();
 }

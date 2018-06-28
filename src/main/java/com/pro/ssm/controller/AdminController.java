@@ -2,8 +2,9 @@ package com.pro.ssm.controller;
 
 import com.pro.ssm.enumcase.CodeType;
 import com.pro.ssm.message.Msg;
+import com.pro.ssm.model.Course;
 import com.pro.ssm.model.Student;
-import com.pro.ssm.service.StudentService;
+import com.pro.ssm.service.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,39 +22,48 @@ public class AdminController {
 
     @Resource
     StudentService studentService;
+    @Resource
+    TeacherService teacherService;
+    @Resource
+    ClsService clsService;
+    @Resource
+    CourseService courseService;
+    @Resource
+    DepartmentService departmentService;
+    @Resource
+    MsgService msgService;
+
 
     @ResponseBody
     @RequestMapping(value = "/base_info",method = RequestMethod.GET)
     public Map<String,Object> getBaseInfo(HttpServletRequest request, Model model){
-        Map<String,Object> res = new HashMap<String, Object>();
-        //!!!!!获取信息
         Map<String,Object> tmp = new HashMap<String, Object>();
         tmp.put("stu_num",studentService.countStudentNum());
-        tmp.put("course_num",10);
-        tmp.put("teacher_num",10);
-        tmp.put("class_num",10);
-        //
-        return Msg.Unfinished();
-        //return Msg.Success("成功获取信息",tmp);
+        tmp.put("course_num",courseService.countNum());
+        tmp.put("teacher_num",teacherService.countNum());
+        tmp.put("class_num",clsService.countNum());
+        return Msg.Success("成功获取信息",tmp);
+    }
+
+    @ResponseBody
+    @RequestMapping(value = "/department_list",method = RequestMethod.GET)
+    public Map<String,Object> getDepartmentList(HttpServletRequest request, Model model){
+        return Msg.Success("成功获取信息",departmentService.selectAll());
     }
 
     @ResponseBody
     @RequestMapping(value = "/stu/list",method = RequestMethod.POST)
     public Map<String,Object> getStuList(HttpServletRequest request, Model model){
-        Map<String,Object> res = new HashMap<String, Object>();
         int st = Integer.parseInt(request.getParameter("start"));
         int ed = Integer.parseInt(request.getParameter("n"));
-        //!!!!!
-        //
-        return Msg.Unfinished();
+        return Msg.Success("成功获取信息",studentService.selectSome(st,ed));
     }
 
     @ResponseBody
     @RequestMapping(value = "/stu/search",method = RequestMethod.POST)
     public Map<String,Object> studentSearch(HttpServletRequest request, Model model){
         String key = request.getParameter("key");
-        //搜索...
-        return Msg.Unfinished();
+        return Msg.Success("成功搜索",studentService.selectBySearch(key));
     }
 
     @ResponseBody
@@ -135,6 +145,26 @@ public class AdminController {
         }
         else{
             return Msg.Error("不存在学生");
+        }
+    }
+
+    @ResponseBody
+    @RequestMapping(value = "/message/list",method = RequestMethod.GET)
+    public Map<String,Object> showMessageList(){
+        return Msg.Success("成功获取信息",msgService.selectUnReply(10));
+    }
+
+    @ResponseBody
+    @RequestMapping(value = "/message/reply",method = RequestMethod.POST)
+    public Map<String,Object> replyMsg(HttpServletRequest request, Model model){
+        int msgid = Integer.parseInt(request.getParameter("message_id"));
+        String content = request.getParameter("content");
+        boolean tag = msgService.replyMessage(msgid,content);
+        if(tag == true){
+            return Msg.Success("成功回复留言",null);
+        }
+        else{
+            return Msg.Error("不存在该留言");
         }
     }
 }

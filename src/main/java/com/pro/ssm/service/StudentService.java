@@ -1,6 +1,10 @@
 package com.pro.ssm.service;
 
 import com.pro.ssm.model.Student;
+import org.apache.ibatis.annotations.Param;
+import org.springframework.web.bind.annotation.RequestParam;
+
+import java.util.List;
 
 public interface StudentService {
     Student getUserById(String userid);
@@ -17,4 +21,8 @@ public interface StudentService {
     void changePsd(String userId, String psd);
 
     int countStudentNum();
+
+    List<Student> selectSome(int start_id, int num);
+
+    List<Student> selectBySearch(String key);
 }

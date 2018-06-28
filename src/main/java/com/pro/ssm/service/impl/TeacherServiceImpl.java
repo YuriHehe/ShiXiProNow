@@ -22,4 +22,8 @@ public class TeacherServiceImpl implements TeacherService {
         tmp.setPassword(psd);
         teacherDao.updateByPrimaryKey(tmp);
     }
+
+    public int countNum() {
+        return teacherDao.selectNum();
+    }
 }

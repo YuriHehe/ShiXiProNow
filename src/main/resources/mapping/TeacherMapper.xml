@@ -114,4 +114,7 @@
       address = #{address,jdbcType=CHAR}
     where tid = #{tid,jdbcType=CHAR}
   </update>
+  <select id="selectNum" resultType="int">
+    select count(*) from teacher
+  </select>
 </mapper>

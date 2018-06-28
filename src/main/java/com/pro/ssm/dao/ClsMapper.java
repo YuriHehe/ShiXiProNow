@@ -14,4 +14,6 @@ public interface ClsMapper {
     int updateByPrimaryKeySelective(Cls record);
 
     int updateByPrimaryKey(Cls record);
+
+    int selectNum();
 }
