@@ -1,4 +1,4 @@
-package com.pro.ssm.ccontroller;
+package com.pro.ssm.controller;
 
 import com.pro.ssm.enumcase.CodeType;
 import com.pro.ssm.user.UserService;

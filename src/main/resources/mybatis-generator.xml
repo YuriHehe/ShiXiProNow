@@ -5,7 +5,7 @@
 <generatorConfiguration>
 
     <!-- 本地数据库驱动程序jar包的全路径 -->
-    <classPathEntry location="C:\Users\YuriAlex\.m2\repository\mysql\mysql-connector-java\5.1.36\mysql-connector-java-5.1.36.jar"/>
+    <classPathEntry location="/home/wangweimin/.m2/repository/mysql/mysql-connector-java/5.1.29/mysql-connector-java-5.1.29.jar"/>
 
     <context id="context" targetRuntime="MyBatis3">
         <commentGenerator>
@@ -39,8 +39,36 @@
         <!-- 相关表的配置 -->
         <table tableName="admin" enableCountByExample="false" enableDeleteByExample="false" enableSelectByExample="false"
                enableUpdateByExample="false"/>
+
+        <!-- 相关表的配置 -->
+        <table tableName="cls" enableCountByExample="false" enableDeleteByExample="false" enableSelectByExample="false"
+               enableUpdateByExample="false"/>
+
+        <!-- 相关表的配置 -->
+        <table tableName="course" enableCountByExample="false" enableDeleteByExample="false" enableSelectByExample="false"
+               enableUpdateByExample="false"/>
+
+        <!-- 相关表的配置 -->
+        <table tableName="departmet" enableCountByExample="false" enableDeleteByExample="false" enableSelectByExample="false"
+               enableUpdateByExample="false"/>
+
+        <!-- 相关表的配置 -->
+        <table tableName="message" enableCountByExample="false" enableDeleteByExample="false" enableSelectByExample="false"
+               enableUpdateByExample="false"/>
+
+        <!-- 相关表的配置 -->
+        <table tableName="schedule" enableCountByExample="false" enableDeleteByExample="false" enableSelectByExample="false"
+               enableUpdateByExample="false"/>
+
+        <!-- 相关表的配置 -->
+        <table tableName="stu_cls" enableCountByExample="false" enableDeleteByExample="false" enableSelectByExample="false"
+               enableUpdateByExample="false"/>
+
+        <!-- 相关表的配置 -->
         <table tableName="student" enableCountByExample="false" enableDeleteByExample="false" enableSelectByExample="false"
                enableUpdateByExample="false"/>
+
+        <!-- 相关表的配置 -->
         <table tableName="teacher" enableCountByExample="false" enableDeleteByExample="false" enableSelectByExample="false"
                enableUpdateByExample="false"/>
     </context>

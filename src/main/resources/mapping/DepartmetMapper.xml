@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.pro.ssm.dao.DepartmetMapper" >
+  <resultMap id="BaseResultMap" type="com.pro.ssm.model.Departmet" >
+    <id column="did" property="did" jdbcType="INTEGER" />
+    <result column="dname" property="dname" jdbcType="CHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    did, dname
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from departmet
+    where did = #{did,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from departmet
+    where did = #{did,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.pro.ssm.model.Departmet" >
+    insert into departmet (did, dname)
+    values (#{did,jdbcType=INTEGER}, #{dname,jdbcType=CHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.pro.ssm.model.Departmet" >
+    insert into departmet
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="did != null" >
+        did,
+      </if>
+      <if test="dname != null" >
+        dname,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="did != null" >
+        #{did,jdbcType=INTEGER},
+      </if>
+      <if test="dname != null" >
+        #{dname,jdbcType=CHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.pro.ssm.model.Departmet" >
+    update departmet
+    <set >
+      <if test="dname != null" >
+        dname = #{dname,jdbcType=CHAR},
+      </if>
+    </set>
+    where did = #{did,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.pro.ssm.model.Departmet" >
+    update departmet
+    set dname = #{dname,jdbcType=CHAR}
+    where did = #{did,jdbcType=INTEGER}
+  </update>
+</mapper>

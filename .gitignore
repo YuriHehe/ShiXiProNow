@@ -27,3 +27,4 @@ hs_err_pid*
 web-ssm.iml
 target/
 src/main/resources/jdbc.properties
+src/main/resources/mybatis-generator.xml
