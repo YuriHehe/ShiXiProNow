@@ -1,5 +1,6 @@
 package com.pro.ssm.user.impl;
 
+import com.pro.ssm.enumcase.CodeType;
 import com.pro.ssm.model.Admin;
 import com.pro.ssm.model.Student;
 import com.pro.ssm.model.Teacher;
@@ -26,7 +27,7 @@ public class UserServiceImpl implements UserService {
     public Map<String, Object> change_password(String userid, String role, String oldpsd, String newpsd) {
         Map<String, Object> res;
         res = userCheck(userid,oldpsd,role);
-        if(!res.get("code").equals(200)){
+        if(!res.get("code").equals(CodeType.SUCCESS)){
             //密码校验不成功直接返回错误信息
             return res;
         }
@@ -57,15 +58,15 @@ public class UserServiceImpl implements UserService {
             if(role.equals("admin")){
                 Admin tmp = adminService.getUserById(userid);
                 if(tmp == null){
-                    res.put("code", 1000);
+                    res.put("code", CodeType.ERROR);
                     res.put("msg", "不存在用户名");
                 }
                 else if(password.equals(tmp.getPassword())){
-                    res.put("code", 200);
+                    res.put("code", CodeType.SUCCESS);
                     res.put("msg", "成功");
                 }
                 else{
-                    res.put("code", 1000);
+                    res.put("code", CodeType.ERROR);
                     res.put("msg", "错误的密码");
                 }
                 break;
@@ -77,11 +78,11 @@ public class UserServiceImpl implements UserService {
                     res.put("msg", "不存在用户名");
                 }
                 else if(password.equals(tmp.getPassword())){
-                    res.put("code", 200);
+                    res.put("code", CodeType.SUCCESS);
                     res.put("msg", "成功");
                 }
                 else{
-                    res.put("code", 1000);
+                    res.put("code", CodeType.ERROR);
                     res.put("msg", "错误的密码");
                 }
                 break;
@@ -93,11 +94,11 @@ public class UserServiceImpl implements UserService {
                     res.put("msg", "不存在用户名");
                 }
                 else if(password.equals(tmp.getPassword())){
-                    res.put("code", 200);
+                    res.put("code", CodeType.SUCCESS);
                     res.put("msg", "成功");
                 }
                 else{
-                    res.put("code", 1000);
+                    res.put("code", CodeType.ERROR);
                     res.put("msg", "错误的密码");
                 }
                 break;

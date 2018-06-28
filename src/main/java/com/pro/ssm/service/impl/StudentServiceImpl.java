@@ -22,4 +22,8 @@ public class StudentServiceImpl implements StudentService {
         tmp.setPassword(psd);
         stuDao.updateByPrimaryKey(tmp);
     }
+
+    public int countStudentNum() {
+        return 0;
+    }
 }
