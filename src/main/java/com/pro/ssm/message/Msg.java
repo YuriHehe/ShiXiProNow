@@ -7,14 +7,14 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Msg {
-    static Map<String,Object> Error(String msg){
+    static public Map<String,Object> Error(String msg){
         Map<String,Object> res = new HashMap<String, Object>();
         res.put("code", CodeType.ERROR);
         res.put("msg", msg);
         res.put("data", null);
         return res;
     }
-    static Map<String,Object> Success(String msg, Map<String,Object> data){
+    static public Map<String,Object> Success(String msg, Map<String,Object> data){
         Map<String,Object> res = new HashMap<String, Object>();
         Map<String,Object> res2 = new HashMap<String, Object>();
         res2.putAll(data);
@@ -23,14 +23,14 @@ public class Msg {
         res.put("msg", msg);
         return res;
     }
-    static Map<String,Object> NotLoginError(){
+    static public Map<String,Object> NotLoginError(){
         Map<String,Object> res = new HashMap<String, Object>();
         res.put("data", null);
         res.put("code", CodeType.UNLOGIN);
         res.put("msg", "未登陆错误");
         return res;
     }
-    static Map<String,Object> Unfinished(){
+    static public Map<String,Object> Unfinished(){
         Map<String,Object> res = new HashMap<String, Object>();
         res.put("data", null);
         res.put("code", CodeType.UNFINISHED);
