@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -329,5 +330,68 @@ public class AdminController {
             res.put("address",tea.getAddress());
             return Msg.Success("成功获取老师信息",res);
         }
+    }
+
+    @ResponseBody
+    @RequestMapping(value = "/course/add",method = RequestMethod.POST)
+    public Map<String,Object> addCourse(HttpServletRequest request, Model model){
+        Course tmp = new Course();
+        tmp.setCname(request.getParameter("name"));
+        tmp.setDid(Integer.parseInt(request.getParameter("did")));
+        BigDecimal bb = new BigDecimal(request.getParameter("credit"));
+        tmp.setCredit(bb);
+        tmp.setHour(Integer.parseInt(request.getParameter("hour")));
+        boolean tag = courseService.insertCs(tmp);
+        if(tag==true){
+            return Msg.Success("成功增加课程",null);
+        }
+        else{
+            return Msg.Error("课程已经存在");
+        }
+    }
+    @ResponseBody
+    @RequestMapping(value = "/course/eidt",method = RequestMethod.POST)
+    public Map<String,Object> editCourse(HttpServletRequest request, Model model){
+        Course tmp = new Course();
+        tmp.setCid(Integer.parseInt(request.getParameter("cid")));
+        tmp.setCname(request.getParameter("name"));
+        tmp.setDid(Integer.parseInt(request.getParameter("did")));
+        BigDecimal bb = new BigDecimal(request.getParameter("credit"));
+        tmp.setCredit(bb);
+        tmp.setHour(Integer.parseInt(request.getParameter("hour")));
+        boolean tag = courseService.updateCs(tmp);
+        if(tag==true){
+            return Msg.Success("成功修改课程",null);
+        }
+        else{
+            return Msg.Error("课程不存在");
+        }
+    }
+    @ResponseBody
+    @RequestMapping(value = "/course/del",method = RequestMethod.POST)
+    public Map<String,Object> delCourse(HttpServletRequest request, Model model){
+        String id = request.getParameter("cid");
+        boolean tag = courseService.delCsById(Integer.parseInt(id));
+        if(tag==true){
+            return Msg.Success("成功删除课程",null);
+        }
+        else{
+            return Msg.Error("课程不存在");
+        }
+    }
+    @ResponseBody
+    @RequestMapping(value = "/course/search",method = RequestMethod.POST)
+    public Map<String,Object> searchCourse(HttpServletRequest request, Model model){
+        return Msg.Unfinished();
+    }
+    @ResponseBody
+    @RequestMapping(value = "/course/list",method = RequestMethod.GET)
+    public Map<String,Object> listCourse(HttpServletRequest request, Model model){
+        return Msg.Unfinished();
+    }
+    @ResponseBody
+    @RequestMapping(value = "/course/info",method = RequestMethod.GET)
+    public Map<String,Object> infoCourse(HttpServletRequest request, Model model){
+        return Msg.Unfinished();
     }
 }
