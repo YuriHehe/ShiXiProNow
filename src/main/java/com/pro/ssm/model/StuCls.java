@@ -33,4 +33,8 @@ public class StuCls extends StuClsKey {
     public void setCreateTime(Date createTime) {
         this.createTime = createTime;
     }
+
+    public BigDecimal getGrade() {
+        return usualGrade != null && finalGrade != null ? (usualGrade.add(finalGrade)).divide(new BigDecimal(2)) : null;
+    }
 }

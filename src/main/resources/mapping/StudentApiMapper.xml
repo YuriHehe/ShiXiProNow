@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.pro.ssm.dao.MyStudentDao">
+    <!--
+     {
+	        cid:1, // 课程id
+	        course:"数据库", // 课程名称
+	        teacher:"张三", // 教师姓名
+	        start_session:1, // 开始节数
+	        end_session:2, // 结束节数
+            address: "A1584" // 上课地点
+	    }
+    -->
+    <select id="getClasstabeByStuid" resultType="com.pro.ssm.model.custom.ClassTable" parameterType="map">
+        select
+            cls.cid,
+            course.cname  as course,
+            teacher.tname as teacher,
+            schedule.day,
+            schedule.start_session,
+            schedule.end_session,
+            schedule.address
+        from cls
+            join course
+            join stu_cls
+            join teacher
+            join schedule
+                on cls.clsid = schedule.clsid and cls.cid = course.cid
+                   and cls.tid = teacher.tid and stu_cls.clsid = cls.clsid
+        where stu_cls.sid = #{stuid,jdbcType=CHAR} and schedule.start_week &lt;= #{week,jdbcType=INTEGER}
+              and schedule.end_week &gt;= #{week,jdbcType=INTEGER}
+        order by schedule.start_session
+    </select>
+
+    <!--
+    #### 已选教学班信息
+    `GET /stu/course`
+    {
+        cid:100, // 课程id
+        name:"数据库", // 课程名称
+        teacher:"张三", // 教师姓名
+        department:"计算机学院", // 开课学院
+        credit:3.5, // 学分
+        hour:64 //学时
+    }
+    -->
+    <select id="getStuCourseByStuid" resultType="com.pro.ssm.model.custom.CourseInfo" parameterType="map">
+        select
+            cls.cid,
+            course.cname    as name,
+            teacher.tname   as teacher,
+            departmet.dname as department,
+            course.credit,
+            course.hour
+        from cls
+            join course
+            join stu_cls
+            join teacher
+            join departmet
+                on cls.cid = course.cid and cls.tid = teacher.tid and stu_cls.clsid = cls.clsid and
+                   course.did = departmet.did
+        where stu_cls.sid = #{stuid,jdbcType=CHAR}
+    </select>
+
+    <!--
+    #### 可选课程和教学班信息
+    `GET /stu/course_list`
+
+    ```json
+    [
+        {
+            cid:100, // 课程id
+            name:"数据库", // 课程名称
+            department:"计算机学院", // 开课学院
+            credit:3.5, // 学分
+            hour:64, //学时
+            class_num:3 //教学班数量
+        },
+        ...
+    ]
+    ```
+    -->
+    <select id="getStuAvailableCourseByStuid" resultType="com.pro.ssm.model.custom.CourseInfo" parameterType="map">
+        select
+            cls.cid,
+            course.cname    as name,
+            teacher.tname   as teacher,
+            departmet.dname as department,
+            course.credit,
+            course.hour
+        from cls
+            join course
+            join teacher
+            join departmet
+            join student
+                on cls.cid = course.cid and cls.tid = teacher.tid and course.did = student.did and
+                   course.did = departmet.did
+        where student.sid = #{stuid,jdbcType=CHAR}
+    </select>
+
+    <!--#### 查询教师开设的教学班
+        `POST /stu/class_search`
+        ```json
+        [
+            {
+                cid:100, // 课程id
+                clsid:125, // 教学班id
+                name:"数据库", // 课程名称
+                department:"计算机学院", // 开课学院
+                credit:3.5, // 学分
+                hour:64 //学时
+            },
+            ...
+        ]
+        ```
+       -->
+
+    <select id="getClsByTeacheName" resultType="com.pro.ssm.model.custom.ClsInfo" parameterType="map">
+        select
+            cls.cid,
+            cls.clsid,
+            course.cname    as name,
+            teacher.tname   as teacher,
+            departmet.dname as department,
+            course.credit,
+            course.hour
+        from cls
+            join course
+            join teacher
+            join departmet
+                on cls.cid = course.cid and cls.tid = teacher.tid and
+                   course.did = departmet.did
+        where teacher.tname like '%${tname}%'
+    </select>
+
+    <!--
+    #### 留言列表
+    `GET /stu/message`
+
+    ```json
+    [
+        {
+            id:1, // 留言id
+            stu_name:"王伟民",
+            content:"", // 留言内容
+            reply:"", //管理员回复(可能为空)
+            reply_time: "2018/06/27 10:20", //回复时间(可能为空)
+            create_time: "2018/06/27 10:00" //留言时间
+        },
+        ...
+    ]
+    ```
+    -->
+
+    <select id="getStuMessage" resultType="com.pro.ssm.model.custom.MessageInfo" parameterType="map">
+        select
+            msg_id  as id,
+            s.sname as stu_name,
+            content,
+            reply,
+            create_time,
+            reply_time
+        from message
+            join student s on message.sid = s.sid
+        where s.sid = #{stuid,jdbcType=CHAR}
+        limit 0, 10
+    </select>
+
+    <!--
+    #### 成绩信息
+    ```json
+    [
+        {
+            clsid:1 ,
+            cid:,
+            course:"数据库", // 课程名称
+            credit:3,
+            teacher:"张三", // 教师姓名
+            usual_grade:"90", // 平时成绩(可能为空,即未录入)
+            final_grade:"90" // 期末成绩(可能为空,即未录入)
+            grade:"90", // 最终成绩
+            grade_time:"2018/06/25 15:00" // 成绩录入时间
+        },
+        ...
+    ]
+    ```
+    -->
+    <select id="getStuGrade" resultType="com.pro.ssm.model.custom.GradeInfo" parameterType="map">
+        select
+            stu_cls.clsid,
+            course.cid,
+            course.cname as course,
+            course.credit,
+            t.tname as teacher,
+            stu_cls.usual_grade,
+            stu_cls.final_grade,
+            stu_cls.create_time as grade_time
+        from stu_cls join cls join course join teacher t on cls.tid = t.tid
+            and stu_cls.clsid=cls.clsid and cls.cid=course.cid
+        where stu_cls.sid = #{stuid,jdbcType=CHAR}
+        limit 0, 10
+    </select>
+
+</mapper>

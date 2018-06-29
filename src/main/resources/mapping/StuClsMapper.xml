@@ -12,7 +12,7 @@
     clsid, sid, final_grade, usual_grade, create_time
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="com.pro.ssm.model.StuClsKey" >
-    select 
+    select
     <include refid="Base_Column_List" />
     from stu_cls
     where clsid = #{clsid,jdbcType=INTEGER}
@@ -24,9 +24,9 @@
       and sid = #{sid,jdbcType=CHAR}
   </delete>
   <insert id="insert" parameterType="com.pro.ssm.model.StuCls" >
-    insert into stu_cls (clsid, sid, final_grade, 
+    insert into stu_cls (clsid, sid, final_grade,
       usual_grade, create_time)
-    values (#{clsid,jdbcType=INTEGER}, #{sid,jdbcType=CHAR}, #{finalGrade,jdbcType=DECIMAL}, 
+    values (#{clsid,jdbcType=INTEGER}, #{sid,jdbcType=CHAR}, #{finalGrade,jdbcType=DECIMAL},
       #{usualGrade,jdbcType=DECIMAL}, #{createTime,jdbcType=TIMESTAMP})
   </insert>
   <insert id="insertSelective" parameterType="com.pro.ssm.model.StuCls" >
@@ -90,4 +90,14 @@
     where clsid = #{clsid,jdbcType=INTEGER}
       and sid = #{sid,jdbcType=CHAR}
   </update>
+
+  <!--add by wang -->
+  <select id="selectByStu" resultType="com.pro.ssm.model.StuCls">
+    select
+    <include refid="Base_Column_List" />
+    from stu_cls
+    where sid = #{stuid,jdbcType=CHAR}
+  </select>
+
+
 </mapper>

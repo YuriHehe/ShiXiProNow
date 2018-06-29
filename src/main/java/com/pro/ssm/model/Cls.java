@@ -9,6 +9,10 @@ public class Cls {
 
     private String tid;
 
+    private Integer cid;
+
+    private String term;
+
     public Integer getClsid() {
         return clsid;
     }
@@ -39,5 +43,21 @@ public class Cls {
 
     public void setTid(String tid) {
         this.tid = tid == null ? null : tid.trim();
+    }
+
+    public Integer getCid() {
+        return cid;
+    }
+
+    public void setCid(Integer cid) {
+        this.cid = cid;
+    }
+
+    public String getTerm() {
+        return term;
+    }
+
+    public void setTerm(String term) {
+        this.term = term == null ? null : term.trim();
     }
 }

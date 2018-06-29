@@ -1,6 +1,6 @@
 package com.pro.ssm.controller;
 
-import com.pro.ssm.enumcase.CodeType;
+import com.pro.ssm.util.Msg;
 import com.pro.ssm.user.UserService;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Controller;
@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-import java.lang.reflect.Member;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -32,7 +31,7 @@ public class AppController {
         String role = request.getParameter("role");
         //检查是否存在于数据库
         Map<String,Object> res = userService.userCheck(userid,password,role);
-        if(res.get("code").equals(CodeType.SUCCESS)){
+        if(res.get("code").equals(Msg.CodeType.SUCCESS)){
             request.getSession().setAttribute("login","1");
             request.getSession().setAttribute("userid",userid);
             request.getSession().setAttribute("role",role);
@@ -47,7 +46,7 @@ public class AppController {
         request.getSession().removeAttribute("userid");
         request.getSession().removeAttribute("role");
         Map<String, Object> res = new HashMap<String, Object>();
-        res.put("code", CodeType.UNLOGIN);
+        res.put("code", Msg.CodeType.UNLOGIN);
         res.put("msg", "未登录");
         res.put("data", null);
         return res;
@@ -66,7 +65,7 @@ public class AppController {
         }
         else{
             res = new HashMap<String, Object>();
-            res.put("code", CodeType.UNLOGIN);
+            res.put("code", Msg.CodeType.UNLOGIN);
             res.put("msg", "未登录");
             res.put("data", null);
         }
@@ -86,7 +85,7 @@ public class AppController {
         }
         else{
             res = new HashMap<String, Object>();
-            res.put("code", CodeType.UNLOGIN);
+            res.put("code", Msg.CodeType.UNLOGIN);
             res.put("msg", "未登录");
             res.put("data", null);
         }

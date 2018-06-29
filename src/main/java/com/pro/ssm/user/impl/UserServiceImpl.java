@@ -1,7 +1,6 @@
 package com.pro.ssm.user.impl;
 
-import com.pro.ssm.enumcase.CodeType;
-import com.pro.ssm.message.Msg;
+import com.pro.ssm.util.Msg;
 import com.pro.ssm.model.Admin;
 import com.pro.ssm.model.Student;
 import com.pro.ssm.model.Teacher;
@@ -12,7 +11,6 @@ import com.pro.ssm.user.UserService;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import java.util.HashMap;
 import java.util.Map;
 
 @Service
@@ -28,7 +26,7 @@ public class UserServiceImpl implements UserService {
     public Map<String, Object> change_password(String userid, String role, String oldpsd, String newpsd) {
         Map<String, Object> res;
         res = userCheck(userid, oldpsd, role);
-        if (!res.get("code").equals(CodeType.SUCCESS)) {
+        if (!res.get("code").equals(Msg.CodeType.SUCCESS)) {
             //密码校验不成功直接返回错误信息
             return res;
         }
