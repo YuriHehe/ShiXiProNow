@@ -2,11 +2,13 @@ package com.pro.ssm.controller;
 
 import com.pro.ssm.util.Msg;
 import com.pro.ssm.user.UserService;
+import org.apache.ibatis.annotations.Param;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
@@ -23,6 +25,36 @@ public class AppController {
 
     @Resource
     private UserService userService;
+
+    @ResponseBody
+    @RequestMapping(value = "/testChangePsd",method = RequestMethod.GET)
+    public Map<String,Object> testChangePsd(HttpServletRequest request, Model model){
+        Map<String,Object> res;
+        if(request.getSession().getAttribute("login").equals("1")){
+            String userid = request.getSession().getAttribute("userid").toString();
+            String role = request.getSession().getAttribute("role").toString();
+            String oldpsd = request.getParameter("old");
+            String newpsd = request.getParameter("new");
+            res = userService.change_password(userid,role,oldpsd,newpsd);
+        }
+        else{
+            res = new HashMap<String, Object>();
+            res.put("code", Msg.CodeType.UNLOGIN);
+            res.put("msg", "未登录");
+            res.put("data", null);
+        }
+        return res;
+    }
+
+    @ResponseBody
+    @RequestMapping(value = "/testLogin",method = RequestMethod.GET)
+    public Map<String,Object> testLogin(HttpServletRequest request, @RequestParam("userid")String userid, @RequestParam("role")String role){
+        Map<String,Object> res = new HashMap<String, Object>();
+        request.getSession().setAttribute("login","1");
+        request.getSession().setAttribute("userid",userid);
+        request.getSession().setAttribute("role",role);
+        return res;
+    }
 
     @ResponseBody
     @RequestMapping(value = "/loginError", method = RequestMethod.GET)
@@ -76,36 +108,6 @@ public class AppController {
             res.put("msg", "未登录");
             res.put("data", null);
         }
-        return res;
-    }
-
-    @ResponseBody
-    @RequestMapping(value = "/testChangePsd",method = RequestMethod.GET)
-    public Map<String,Object> testChangePsd(HttpServletRequest request, Model model){
-        Map<String,Object> res;
-        if(request.getSession().getAttribute("login").equals("1")){
-            String userid = request.getSession().getAttribute("userid").toString();
-            String role = request.getSession().getAttribute("role").toString();
-            String oldpsd = request.getParameter("old");
-            String newpsd = request.getParameter("new");
-            res = userService.change_password(userid,role,oldpsd,newpsd);
-        }
-        else{
-            res = new HashMap<String, Object>();
-            res.put("code", Msg.CodeType.UNLOGIN);
-            res.put("msg", "未登录");
-            res.put("data", null);
-        }
-        return res;
-    }
-
-    @ResponseBody
-    @RequestMapping(value = "/testLogin",method = RequestMethod.GET)
-    public Map<String,Object> testLogin(HttpServletRequest request, Model model){
-        Map<String,Object> res = new HashMap<String, Object>();
-        request.getSession().setAttribute("login","1");
-        request.getSession().setAttribute("userid","admin");
-        request.getSession().setAttribute("role","admin");
         return res;
     }
 

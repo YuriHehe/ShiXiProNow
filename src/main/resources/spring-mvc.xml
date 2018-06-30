@@ -4,16 +4,12 @@
        xmlns:context="http://www.springframework.org/schema/context"
        xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:aop="http://www.springframework.org/schema/aop"
        xmlns:tx="http://www.springframework.org/schema/tx"
-       xmlns:mvc="http://www.springframework.org/schema/mvc"
        xsi:schemaLocation="http://www.springframework.org/schema/beans
                         http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
                         http://www.springframework.org/schema/context
                         http://www.springframework.org/schema/context/spring-context-4.0.xsd
                         http://www.springframework.org/schema/mvc
-                        http://www.springframework.org/schema/mvc/spring-mvc-4.0.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
-                        http://www.springframework.org/schema/mvc/spring-mvc-4.0.xsd
-                        http://www.springframework.org/schema/tx
-                        http://www.springframework.org/schema/tx/spring-tx.xsd">
+                        http://www.springframework.org/schema/mvc/spring-mvc-4.0.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd">
 
     <!-- 自动扫描  @Controller-->
     <context:component-scan base-package="com.pro.ssm.controller"/>
@@ -27,7 +23,6 @@
             </list>
         </property>
     </bean>
-
     <!-- 启动SpringMVC的注解功能，完成请求和注解POJO的映射 -->
     <bean class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter">
         <property name="messageConverters">
@@ -37,19 +32,20 @@
         </property>
     </bean>
 
+
     <!-- transaction support-->
-    <!-- 事务管理器 -->
+    <!-- PlatformTransactionMnager -->
     <bean id="txManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
-        <property name="dataSource" ref="dataSource"/>
+        <property name="dataSource" ref="dataSource" />
     </bean>
-    <!-- 事务注解驱动，标注@Transactional的类和方法将具有事务性 -->
-    <tx:annotation-driven transaction-manager="txManager"/>
+    <!-- enable transaction annotation support -->
+    <tx:annotation-driven transaction-manager="txManager" />
 
     <!-- 定义跳转的文件的前后缀 ，视图模式配置 -->
     <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
-        <property name="prefix" value="/WEB-INF/jsp/"/>
+        <property name="prefix" value="/WEB-INF/jsp/" />
         <property name="suffix" value=".jsp"/>
-        <property name="contentType" value="text/html;charset=UTF-8"/>
+        <property name="contentType" value="text/html;charset=UTF-8" />
     </bean>
 
     <!-- 文件上传配置 -->
@@ -61,6 +57,7 @@
         <!-- 内存中的最大值 -->
         <property name="maxInMemorySize" value="4096"/>
     </bean>
+
 
     <!--*************** 支持aop **************** -->
     <aop:aspectj-autoproxy></aop:aspectj-autoproxy>

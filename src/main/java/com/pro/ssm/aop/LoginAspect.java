@@ -26,6 +26,29 @@ public class LoginAspect {
     @Pointcut(value = "execution(* com.pro.ssm.controller.StuController.*(..))")
     public void loginCheckStudent(){}
 
+    @Pointcut(value = "execution(* com.pro.ssm.controller.TeacherController.*(..))")
+    public void loginCheckTeacher(){}
+
+
+
+    @Around("loginCheckTeacher()")
+    public Map<String,Object> loginTeacher(ProceedingJoinPoint joinPoint) throws Throwable {
+        HttpServletRequest request = ((ServletRequestAttributes)RequestContextHolder.getRequestAttributes()).getRequest();
+        Object login = request.getSession().getAttribute("login");
+        if (login == null) {
+            return Msg.Error("权限错误");
+        }
+        String sl = login.toString();
+        if(!sl.equals("1")){
+            return Msg.Error("权限错误");
+        }
+        String userid = request.getSession().getAttribute("userid").toString();
+        String role = request.getSession().getAttribute("role").toString();
+        if(!role.equals("teacher")){
+            return Msg.Error("权限错误");
+        }
+        return (Map<String,Object>)joinPoint.proceed();
+    }
     @Around("loginCheckAdmin()")
     public Map<String,Object> loginAdmin(ProceedingJoinPoint joinPoint) throws Throwable {
         HttpServletRequest request = ((ServletRequestAttributes)RequestContextHolder.getRequestAttributes()).getRequest();
@@ -39,7 +62,7 @@ public class LoginAspect {
         }
         String userid = request.getSession().getAttribute("userid").toString();
         String role = request.getSession().getAttribute("role").toString();
-        if(!role.equals("student")){
+        if(!role.equals("admin")){
             return Msg.Error("权限错误");
         }
         return (Map<String,Object>)joinPoint.proceed();
