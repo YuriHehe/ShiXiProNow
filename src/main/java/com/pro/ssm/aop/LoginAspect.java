@@ -71,6 +71,7 @@ public class LoginAspect {
         }
         return joinPoint.proceed();
     }
+
     @Around("loginCheckAdmin()")
     public Object loginAdmin(ProceedingJoinPoint joinPoint) throws Throwable {
         HttpServletRequest request = ((ServletRequestAttributes)RequestContextHolder.getRequestAttributes()).getRequest();
@@ -89,6 +90,7 @@ public class LoginAspect {
         }
         return joinPoint.proceed();
     }
+
     @Around("loginCheckStudent()")
     public Object loginStu(ProceedingJoinPoint joinPoint) throws Throwable {
         HttpServletRequest request = ((ServletRequestAttributes)RequestContextHolder.getRequestAttributes()).getRequest();

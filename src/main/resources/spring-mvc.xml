@@ -58,6 +58,9 @@
         <property name="maxInMemorySize" value="4096"/>
     </bean>
 
+    <mvc:annotation-driven />
+    <!-- 访问静态资源 -->
+    <mvc:resources location="/res" mapping="/res/**"/>
 
     <!--*************** 支持aop **************** -->
     <aop:aspectj-autoproxy></aop:aspectj-autoproxy>

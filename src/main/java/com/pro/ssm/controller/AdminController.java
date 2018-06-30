@@ -35,98 +35,97 @@ public class AdminController {
     MsgService msgService;
 
     @ResponseBody
-    @RequestMapping(value = "/base_info",method = RequestMethod.GET)
-    public Map<String,Object> getBaseInfo(HttpServletRequest request, Model model){
-        Map<String,Object> tmp = new HashMap<String, Object>();
-        tmp.put("stu_num",studentService.countStudentNum());
-        tmp.put("course_num",courseService.countNum());
-        tmp.put("teacher_num",teacherService.countNum());
-        tmp.put("class_num",clsService.countNum());
-        return Msg.Success("成功获取信息",tmp);
+    @RequestMapping(value = "/base_info", method = RequestMethod.GET)
+    public Map<String, Object> getBaseInfo(HttpServletRequest request, Model model) {
+        Map<String, Object> tmp = new HashMap<String, Object>();
+        tmp.put("stu_num", studentService.countStudentNum());
+        tmp.put("course_num", courseService.countNum());
+        tmp.put("teacher_num", teacherService.countNum());
+        tmp.put("class_num", clsService.countNum());
+        return Msg.Success("成功获取信息", tmp);
     }
 
     @ResponseBody
-    @RequestMapping(value = "/department_list",method = RequestMethod.GET)
-    public Map<String,Object> getDepartmentList(HttpServletRequest request, Model model) {
+    @RequestMapping(value = "/department_list", method = RequestMethod.GET)
+    public Map<String, Object> getDepartmentList(HttpServletRequest request, Model model) {
         List<Departmet> res = departmentService.selectAll();
         List<Map<String, Object>> tmp = new ArrayList<Map<String, Object>>();
         for (Departmet i : res) {
-            Map<String,Object> tt = new HashMap<String, Object>();
-            tt.put("did",i.getDid());
-            tt.put("dname",i.getDname());
+            Map<String, Object> tt = new HashMap<String, Object>();
+            tt.put("did", i.getDid());
+            tt.put("dname", i.getDname());
             tmp.add(tt);
         }
         return Msg.Success("成功获取信息", tmp);
     }
 
     @ResponseBody
-    @RequestMapping(value = "/stu/list",method = RequestMethod.POST)
-    public Map<String,Object> getStuList(HttpServletRequest request, Model model){
+    @RequestMapping(value = "/stu/list", method = RequestMethod.POST)
+    public Map<String, Object> getStuList(HttpServletRequest request, Model model) {
         int st = Integer.parseInt(request.getParameter("start"));
         int ed = Integer.parseInt(request.getParameter("n"));
-        List<Student> res = studentService.selectSome(st,ed);
+        List<Student> res = studentService.selectSome(st, ed);
         List<Map<String, Object>> tmp = new ArrayList<Map<String, Object>>();
         for (Student i : res) {
-            Map<String,Object> tt = new HashMap<String, Object>();
-            tt.put("stuid",i.getSid());
-            tt.put("name",i.getSname());
+            Map<String, Object> tt = new HashMap<String, Object>();
+            tt.put("stuid", i.getSid());
+            tt.put("name", i.getSname());
             String dname = departmentService.getDname(i.getDid());
-            tt.put("department",dname);
-            tt.put("grade",i.getGrade());
-            tt.put("start_year",i.getStartYear());
-            tt.put("sex",i.getSex());
-            tt.put("class",i.getClass());
+            tt.put("department", dname);
+            tt.put("grade", i.getGrade());
+            tt.put("start_year", i.getStartYear());
+            tt.put("sex", i.getSex());
+            tt.put("class", i.getClass());
             tmp.add(tt);
         }
         return Msg.Success("成功获取信息", tmp);
     }
 
     @ResponseBody
-    @RequestMapping(value = "/stu/search",method = RequestMethod.POST)
-    public Map<String,Object> studentSearch(HttpServletRequest request, Model model){
+    @RequestMapping(value = "/stu/search", method = RequestMethod.POST)
+    public Map<String, Object> studentSearch(HttpServletRequest request, Model model) {
         String key = request.getParameter("key");
         List<Student> res = studentService.selectBySearch(key);
         List<Map<String, Object>> tmp = new ArrayList<Map<String, Object>>();
         for (Student i : res) {
-            Map<String,Object> tt = new HashMap<String, Object>();
-            tt.put("stuid",i.getSid());
-            tt.put("name",i.getSname());
+            Map<String, Object> tt = new HashMap<String, Object>();
+            tt.put("stuid", i.getSid());
+            tt.put("name", i.getSname());
             String dname = departmentService.getDname(i.getDid());
-            tt.put("department",dname);
-            tt.put("grade",i.getGrade());
-            tt.put("start_year",i.getStartYear());
-            tt.put("sex",i.getSex());
-            tt.put("class",i.getClass());
+            tt.put("department", dname);
+            tt.put("grade", i.getGrade());
+            tt.put("start_year", i.getStartYear());
+            tt.put("sex", i.getSex());
+            tt.put("class", i.getClass());
             tmp.add(tt);
         }
-        return Msg.Success("成功搜索",tmp);
+        return Msg.Success("成功搜索", tmp);
     }
 
     @ResponseBody
-    @RequestMapping(value = "/stu/info",method = RequestMethod.GET)
-    public Map<String,Object> getStudentInfo(HttpServletRequest request, Model model){
+    @RequestMapping(value = "/stu/info", method = RequestMethod.GET)
+    public Map<String, Object> getStudentInfo(HttpServletRequest request, Model model) {
         String sid = request.getParameter("sid");
         Student stu = studentService.getUserById(sid);
-        if(stu == null){
+        if (stu == null) {
             return Msg.Error("不存在该学生");
-        }
-        else{
-            Map<String,Object> res = new HashMap<String, Object>();
-            res.put("stuid",stu.getSid());
-            res.put("name",stu.getSname());
+        } else {
+            Map<String, Object> res = new HashMap<String, Object>();
+            res.put("stuid", stu.getSid());
+            res.put("name", stu.getSname());
             String dname = departmentService.getDname(stu.getDid());
-            res.put("department",dname);
-            res.put("grade",stu.getGrade());
-            res.put("start_year",stu.getStartYear());
-            res.put("sex",stu.getSex());
-            res.put("class",stu.getClass());
-            return Msg.Success("成功获取学生信息",res);
+            res.put("department", dname);
+            res.put("grade", stu.getGrade());
+            res.put("start_year", stu.getStartYear());
+            res.put("sex", stu.getSex());
+            res.put("class", stu.getClass());
+            return Msg.Success("成功获取学生信息", res);
         }
     }
 
     @ResponseBody
-    @RequestMapping(value = "/stu/add",method = RequestMethod.POST)
-    public Map<String,Object> addStudent(HttpServletRequest request, Model model){
+    @RequestMapping(value = "/stu/add", method = RequestMethod.POST)
+    public Map<String, Object> addStudent(HttpServletRequest request, Model model) {
         Student stu = new Student();
         //读取
         stu.setSid(request.getParameter("stu_id"));
@@ -139,17 +138,16 @@ public class AdminController {
         stu.setPassword(request.getParameter("password"));
         //添加
         boolean tag = studentService.insertUser(stu);
-        if(tag == true){
-            return Msg.Success("成功添加学生",null);
-        }
-        else{
+        if (tag == true) {
+            return Msg.Success("成功添加学生", null);
+        } else {
             return Msg.Error("已存在该学生");
         }
     }
 
     @ResponseBody
-    @RequestMapping(value = "/stu/edit",method = RequestMethod.POST)
-    public Map<String,Object> editStudent(HttpServletRequest request, Model model){
+    @RequestMapping(value = "/stu/edit", method = RequestMethod.POST)
+    public Map<String, Object> editStudent(HttpServletRequest request, Model model) {
         String psd = request.getParameter("password");
         Student stu = new Student();
         //读取
@@ -163,65 +161,62 @@ public class AdminController {
         stu.setPassword(request.getParameter("password"));
         //更新
         boolean tag = studentService.updateUser(stu);
-        if(tag == true){
-            return Msg.Success("更新成功",null);
-        }
-        else{
+        if (tag == true) {
+            return Msg.Success("更新成功", null);
+        } else {
             return Msg.Error("不存在该学生");
         }
     }
 
     @ResponseBody
-    @RequestMapping(value = "/stu/del_stu",method = RequestMethod.POST)
-    public Map<String,Object> delStudent(HttpServletRequest request, Model model){
-        Map<String,Object> res = new HashMap<String, Object>();
+    @RequestMapping(value = "/stu/del_stu", method = RequestMethod.POST)
+    public Map<String, Object> delStudent(HttpServletRequest request, Model model) {
+        Map<String, Object> res = new HashMap<String, Object>();
         String stuId = request.getParameter("stu_id");
         boolean tag = studentService.delUserById(stuId);
-        if(tag == true){
+        if (tag == true) {
             return Msg.Success("成功删除学生", null);
-        }
-        else{
+        } else {
             return Msg.Error("不存在学生");
         }
     }
 
     @ResponseBody
-    @RequestMapping(value = "/message/list",method = RequestMethod.GET)
-    public Map<String,Object> showMessageList(){
+    @RequestMapping(value = "/message/list", method = RequestMethod.GET)
+    public Map<String, Object> showMessageList() {
         List<MessageWithBLOBs> res = msgService.selectUnReply(10);
         List<Map<String, Object>> tmp = new ArrayList<Map<String, Object>>();
         for (MessageWithBLOBs i : res) {
-            Map<String,Object> tt = new HashMap<String, Object>();
-            tt.put("id",i.getMsgId());
-            tt.put("stuid",i.getSid());
+            Map<String, Object> tt = new HashMap<String, Object>();
+            tt.put("id", i.getMsgId());
+            tt.put("stuid", i.getSid());
             String sname = studentService.getSname(i.getSid());
-            tt.put("stu_name",sname);
-            tt.put("content",i.getContent());
-            tt.put("reply",i.getReply());
-            tt.put("reply_time",i.getReplyTime());
-            tt.put("create_time",i.getCreateTime());
+            tt.put("stu_name", sname);
+            tt.put("content", i.getContent());
+            tt.put("reply", i.getReply());
+            tt.put("reply_time", i.getReplyTime());
+            tt.put("create_time", i.getCreateTime());
             tmp.add(tt);
         }
-        return Msg.Success("成功获取信息",tmp);
+        return Msg.Success("成功获取信息", tmp);
     }
 
     @ResponseBody
-    @RequestMapping(value = "/message/reply",method = RequestMethod.POST)
-    public Map<String,Object> replyMsg(HttpServletRequest request, Model model){
+    @RequestMapping(value = "/message/reply", method = RequestMethod.POST)
+    public Map<String, Object> replyMsg(HttpServletRequest request, Model model) {
         int msgid = Integer.parseInt(request.getParameter("message_id"));
         String content = request.getParameter("content");
-        boolean tag = msgService.replyMessage(msgid,content);
-        if(tag == true){
-            return Msg.Success("成功回复留言",null);
-        }
-        else{
+        boolean tag = msgService.replyMessage(msgid, content);
+        if (tag == true) {
+            return Msg.Success("成功回复留言", null);
+        } else {
             return Msg.Error("不存在该留言");
         }
     }
 
     @ResponseBody
-    @RequestMapping(value = "/teacher/add",method = RequestMethod.POST)
-    public Map<String,Object> addTeacher(HttpServletRequest request, Model model){
+    @RequestMapping(value = "/teacher/add", method = RequestMethod.POST)
+    public Map<String, Object> addTeacher(HttpServletRequest request, Model model) {
         Teacher res = new Teacher();
         res.setTid(request.getParameter("tid"));
         res.setPassword(request.getParameter("password"));
@@ -231,16 +226,16 @@ public class AdminController {
         res.setContact(request.getParameter("contact"));
         res.setAddress(request.getParameter("address"));
         boolean tag = teacherService.insertUser(res);
-        if(tag == true){
-            return Msg.Success("成功增加教师",null);
-        }
-        else{
+        if (tag == true) {
+            return Msg.Success("成功增加教师", null);
+        } else {
             return Msg.Error("已存在该教师");
         }
     }
+
     @ResponseBody
-    @RequestMapping(value = "/teacher/edit",method = RequestMethod.POST)
-    public Map<String,Object> editTeacher(HttpServletRequest request, Model model){
+    @RequestMapping(value = "/teacher/edit", method = RequestMethod.POST)
+    public Map<String, Object> editTeacher(HttpServletRequest request, Model model) {
         Teacher res = new Teacher();
         res.setTid(request.getParameter("tid"));
         res.setPassword(request.getParameter("password"));
@@ -250,88 +245,89 @@ public class AdminController {
         res.setContact(request.getParameter("contact"));
         res.setAddress(request.getParameter("address"));
         boolean tag = teacherService.updateUser(res);
-        if(tag == true){
-            return Msg.Success("成功修改教师",null);
-        }
-        else{
+        if (tag == true) {
+            return Msg.Success("成功修改教师", null);
+        } else {
             return Msg.Error("不存在该教师");
-        }
-    }
-    @ResponseBody
-    @RequestMapping(value = "/teacher/del",method = RequestMethod.POST)
-    public Map<String,Object> delTeacher(HttpServletRequest request, Model model){
-        String userid = request.getParameter("tid");
-        boolean tag = teacherService.delUserById(userid);
-        if(tag == true){
-            return Msg.Success("成功删除教师",null);
-        }
-        else{
-            return Msg.Error("不存在该教师");
-        }
-    }
-    @ResponseBody
-    @RequestMapping(value = "/teacher/search",method = RequestMethod.POST)
-    public Map<String,Object> searchTeacher(HttpServletRequest request, Model model){
-        String key = request.getParameter("key");
-        List<Teacher> res = teacherService.selectBySearch(key);
-        List<Map<String, Object>> tmp = new ArrayList<Map<String, Object>>();
-        for (Teacher i : res) {
-            Map<String,Object> tt = new HashMap<String, Object>();
-            tt.put("tid",i.getTid());
-            tt.put("name",i.getTname());
-            tt.put("title",i.getTitle());
-            String dname = departmentService.getDname(i.getDid());
-            tt.put("department",dname);
-            tt.put("contact",i.getContact());
-            tt.put("address",i.getAddress());
-            tmp.add(tt);
-        }
-        return Msg.Success("成功获取信息",tmp);
-    }
-    @ResponseBody
-    @RequestMapping(value = "/teacher/list",method = RequestMethod.GET)
-    public Map<String,Object> listTeacher(HttpServletRequest request, Model model){
-        int st = Integer.parseInt(request.getParameter("start"));
-        int n = Integer.parseInt(request.getParameter("n"));
-        List<Teacher> res = teacherService.selectSome(st,n);
-        List<Map<String, Object>> tmp = new ArrayList<Map<String, Object>>();
-        for (Teacher i : res) {
-            Map<String,Object> tt = new HashMap<String, Object>();
-            tt.put("tid",i.getTid());
-            tt.put("name",i.getTname());
-            tt.put("title",i.getTitle());
-            String dname = departmentService.getDname(i.getDid());
-            tt.put("department",dname);
-            tt.put("contact",i.getContact());
-            tt.put("address",i.getAddress());
-            tmp.add(tt);
-        }
-        return Msg.Success("成功获取信息",tmp);
-    }
-    @ResponseBody
-    @RequestMapping(value = "/teacher/info",method = RequestMethod.GET)
-    public Map<String,Object> infoTeacher(HttpServletRequest request, Model model){
-        String tid = request.getParameter("tid");
-        Teacher tea = teacherService.getUserById(tid);
-        if(tea == null){
-            return Msg.Error("不存在该老师");
-        }
-        else{
-            Map<String,Object> res = new HashMap<String, Object>();
-            res.put("tid",tea.getTid());
-            res.put("name",tea.getTname());
-            res.put("title",tea.getTitle());
-            String dname = departmentService.getDname(tea.getDid());
-            res.put("department",dname);
-            res.put("contact",tea.getContact());
-            res.put("address",tea.getAddress());
-            return Msg.Success("成功获取老师信息",res);
         }
     }
 
     @ResponseBody
-    @RequestMapping(value = "/course/add",method = RequestMethod.POST)
-    public Map<String,Object> addCourse(HttpServletRequest request, Model model){
+    @RequestMapping(value = "/teacher/del", method = RequestMethod.POST)
+    public Map<String, Object> delTeacher(HttpServletRequest request, Model model) {
+        String userid = request.getParameter("tid");
+        boolean tag = teacherService.delUserById(userid);
+        if (tag == true) {
+            return Msg.Success("成功删除教师", null);
+        } else {
+            return Msg.Error("不存在该教师");
+        }
+    }
+
+    @ResponseBody
+    @RequestMapping(value = "/teacher/search", method = RequestMethod.POST)
+    public Map<String, Object> searchTeacher(HttpServletRequest request, Model model) {
+        String key = request.getParameter("key");
+        List<Teacher> res = teacherService.selectBySearch(key);
+        List<Map<String, Object>> tmp = new ArrayList<Map<String, Object>>();
+        for (Teacher i : res) {
+            Map<String, Object> tt = new HashMap<String, Object>();
+            tt.put("tid", i.getTid());
+            tt.put("name", i.getTname());
+            tt.put("title", i.getTitle());
+            String dname = departmentService.getDname(i.getDid());
+            tt.put("department", dname);
+            tt.put("contact", i.getContact());
+            tt.put("address", i.getAddress());
+            tmp.add(tt);
+        }
+        return Msg.Success("成功获取信息", tmp);
+    }
+
+    @ResponseBody
+    @RequestMapping(value = "/teacher/list", method = RequestMethod.GET)
+    public Map<String, Object> listTeacher(HttpServletRequest request, Model model) {
+        int st = Integer.parseInt(request.getParameter("start"));
+        int n = Integer.parseInt(request.getParameter("n"));
+        List<Teacher> res = teacherService.selectSome(st, n);
+        List<Map<String, Object>> tmp = new ArrayList<Map<String, Object>>();
+        for (Teacher i : res) {
+            Map<String, Object> tt = new HashMap<String, Object>();
+            tt.put("tid", i.getTid());
+            tt.put("name", i.getTname());
+            tt.put("title", i.getTitle());
+            String dname = departmentService.getDname(i.getDid());
+            tt.put("department", dname);
+            tt.put("contact", i.getContact());
+            tt.put("address", i.getAddress());
+            tmp.add(tt);
+        }
+        return Msg.Success("成功获取信息", tmp);
+    }
+
+    @ResponseBody
+    @RequestMapping(value = "/teacher/info", method = RequestMethod.GET)
+    public Map<String, Object> infoTeacher(HttpServletRequest request, Model model) {
+        String tid = request.getParameter("tid");
+        Teacher tea = teacherService.getUserById(tid);
+        if (tea == null) {
+            return Msg.Error("不存在该老师");
+        } else {
+            Map<String, Object> res = new HashMap<String, Object>();
+            res.put("tid", tea.getTid());
+            res.put("name", tea.getTname());
+            res.put("title", tea.getTitle());
+            String dname = departmentService.getDname(tea.getDid());
+            res.put("department", dname);
+            res.put("contact", tea.getContact());
+            res.put("address", tea.getAddress());
+            return Msg.Success("成功获取老师信息", res);
+        }
+    }
+
+    @ResponseBody
+    @RequestMapping(value = "/course/add", method = RequestMethod.POST)
+    public Map<String, Object> addCourse(HttpServletRequest request, Model model) {
         Course tmp = new Course();
         tmp.setCname(request.getParameter("name"));
         tmp.setDid(Integer.parseInt(request.getParameter("did")));
@@ -339,16 +335,16 @@ public class AdminController {
         tmp.setCredit(bb);
         tmp.setHour(Integer.parseInt(request.getParameter("hour")));
         boolean tag = courseService.insertCs(tmp);
-        if(tag==true){
-            return Msg.Success("成功增加课程",null);
-        }
-        else{
+        if (tag == true) {
+            return Msg.Success("成功增加课程", null);
+        } else {
             return Msg.Error("课程已经存在");
         }
     }
+
     @ResponseBody
-    @RequestMapping(value = "/course/eidt",method = RequestMethod.POST)
-    public Map<String,Object> editCourse(HttpServletRequest request, Model model){
+    @RequestMapping(value = "/course/eidt", method = RequestMethod.POST)
+    public Map<String, Object> editCourse(HttpServletRequest request, Model model) {
         Course tmp = new Course();
         tmp.setCid(Integer.parseInt(request.getParameter("cid")));
         tmp.setCname(request.getParameter("name"));
@@ -357,61 +353,22 @@ public class AdminController {
         tmp.setCredit(bb);
         tmp.setHour(Integer.parseInt(request.getParameter("hour")));
         boolean tag = courseService.updateCs(tmp);
-        if(tag==true){
-            return Msg.Success("成功修改课程",null);
-        }
-        else{
+        if (tag == true) {
+            return Msg.Success("成功修改课程", null);
+        } else {
             return Msg.Error("课程不存在");
         }
     }
+
     @ResponseBody
-    @RequestMapping(value = "/course/del",method = RequestMethod.POST)
-    public Map<String,Object> delCourse(HttpServletRequest request, Model model){
+    @RequestMapping(value = "/course/del", method = RequestMethod.POST)
+    public Map<String, Object> delCourse(HttpServletRequest request, Model model) {
         String id = request.getParameter("cid");
         boolean tag = courseService.delCsById(Integer.parseInt(id));
-        if(tag==true){
-            return Msg.Success("成功删除课程",null);
-        }
-        else{
+        if (tag == true) {
+            return Msg.Success("成功删除课程", null);
+        } else {
             return Msg.Error("课程不存在");
         }
-    }
-
-    @ResponseBody
-    @RequestMapping(value = "/course/search",method = RequestMethod.POST)
-    public Map<String,Object> searchCourse(HttpServletRequest request, Model model){
-        return Msg.Unfinished();
-    }
-
-    @ResponseBody
-    @RequestMapping(value = "/course/list",method = RequestMethod.GET)
-    public Map<String,Object> listCourse(HttpServletRequest request, Model model){
-        return Msg.Unfinished();
-    }
-
-    @ResponseBody
-    @RequestMapping(value = "/course/info",method = RequestMethod.GET)
-    public Map<String,Object> infoCourse(HttpServletRequest request, Model model){
-        return Msg.Unfinished();
-    }
-
-    @ResponseBody
-    @RequestMapping(value = "/class/add",method = RequestMethod.POST)
-    public Map<String,Object> addClass(HttpServletRequest request, Model model){
-        Cls cls = new Cls();
-        //
-        return Msg.Unfinished();
-    }
-
-    @ResponseBody
-    @RequestMapping(value = "/class/edit",method = RequestMethod.POST)
-    public Map<String,Object> editClass(HttpServletRequest request, Model model){
-        return Msg.Unfinished();
-    }
-
-    @ResponseBody
-    @RequestMapping(value = "/class/del",method = RequestMethod.POST)
-    public Map<String,Object> delClass(HttpServletRequest request, Model model){
-        return Msg.Unfinished();
     }
 }

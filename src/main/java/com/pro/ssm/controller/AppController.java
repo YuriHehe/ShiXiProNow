@@ -1,8 +1,8 @@
 package com.pro.ssm.controller;
 
+import com.pro.ssm.util.ExcelUtil;
 import com.pro.ssm.util.Msg;
 import com.pro.ssm.user.UserService;
-import org.apache.ibatis.annotations.Param;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -14,7 +14,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Controller
@@ -25,6 +27,20 @@ public class AppController {
 
     @Resource
     private UserService userService;
+
+    @ResponseBody
+    @RequestMapping(value = "/testDownload",method = RequestMethod.GET)
+    public Map<String,Object> testDownload(HttpServletRequest request,HttpServletResponse response) throws Exception {
+        List<Map<String,Object>> tmp = new ArrayList<Map<String, Object>>();
+        for(int i = 0;i<10;++i){
+            Map<String,Object> tt = new HashMap<String, Object>();
+            tt.put("a",i);
+            tt.put("b",i+1);
+            tmp.add(tt);
+        }
+        ExcelUtil.writeXls("temp", tmp, request, response);
+        return Msg.Success();
+    }
 
     @ResponseBody
     @RequestMapping(value = "/testChangePsd",method = RequestMethod.GET)
