@@ -4,15 +4,17 @@ import org.apache.poi.hssf.usermodel.*;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.util.CellRangeAddress;
 
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.*;
+import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
 public class ExcelUtil {
-    public static void writeXls(String path, List<Map<String, Object>> lst) throws Exception {
+    public static void writeXls(String filename, List<Map<String, Object>> lst, HttpServletRequest request, HttpServletResponse response) throws Exception {
         try {
+            filename = filename + ".xls";
             String title = "worksheet";
             HSSFWorkbook workbook = new HSSFWorkbook();                        // 创建工作簿对象
             HSSFSheet sheet = workbook.createSheet(title);                     // 创建工作表
@@ -38,7 +40,9 @@ public class ExcelUtil {
 
             if (workbook != null) {
                 try {
-                    FileOutputStream out = new FileOutputStream(path + new SimpleDateFormat("yyyyMMddHHmmss").format(new Date()).toString() + ".xls");
+                    response.setHeader("content-disposition",
+                            "attachment;filename=" + URLEncoder.encode(filename, "utf-8"));
+                    OutputStream out = response.getOutputStream();
                     workbook.write(out);
                     out.close();
                 } catch (IOException e) {

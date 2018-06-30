@@ -29,60 +29,84 @@ public class LoginAspect {
     @Pointcut(value = "execution(* com.pro.ssm.controller.TeacherController.*(..))")
     public void loginCheckTeacher(){}
 
+    @Pointcut(value = "execution(* com.pro.ssm.controller.AppController.*(..))")
+    public void loginCheckUser(){}
 
+    @Around("loginCheckUser()")
+    public Object loginUser(ProceedingJoinPoint joinPoint) throws Throwable {
+        //放行testLogin和Login函数
+        String method = joinPoint.getSignature().getName();
+        if(method.equals("login") || method.equals("testLogin")){
+            return joinPoint.proceed();
+        }
 
-    @Around("loginCheckTeacher()")
-    public Map<String,Object> loginTeacher(ProceedingJoinPoint joinPoint) throws Throwable {
         HttpServletRequest request = ((ServletRequestAttributes)RequestContextHolder.getRequestAttributes()).getRequest();
         Object login = request.getSession().getAttribute("login");
         if (login == null) {
-            return Msg.Error("权限错误");
+            return Msg.NotLoginError();
         }
         String sl = login.toString();
         if(!sl.equals("1")){
-            return Msg.Error("权限错误");
+            return Msg.NotLoginError();
+        }
+        return joinPoint.proceed();
+    }
+
+
+    @Around("loginCheckTeacher()")
+    public Object loginTeacher(ProceedingJoinPoint joinPoint) throws Throwable {
+        HttpServletRequest request = ((ServletRequestAttributes)RequestContextHolder.getRequestAttributes()).getRequest();
+        Object login = request.getSession().getAttribute("login");
+        if (login == null) {
+            return Msg.NotLoginError();
+        }
+        String sl = login.toString();
+        if(!sl.equals("1")){
+            return Msg.NotLoginError();
         }
         String userid = request.getSession().getAttribute("userid").toString();
         String role = request.getSession().getAttribute("role").toString();
         if(!role.equals("teacher")){
             return Msg.Error("权限错误");
         }
-        return (Map<String,Object>)joinPoint.proceed();
+        return joinPoint.proceed();
     }
+
     @Around("loginCheckAdmin()")
-    public Map<String,Object> loginAdmin(ProceedingJoinPoint joinPoint) throws Throwable {
+    public Object loginAdmin(ProceedingJoinPoint joinPoint) throws Throwable {
         HttpServletRequest request = ((ServletRequestAttributes)RequestContextHolder.getRequestAttributes()).getRequest();
         Object login = request.getSession().getAttribute("login");
         if (login == null) {
-            return Msg.Error("权限错误");
+            return Msg.NotLoginError();
         }
         String sl = login.toString();
         if(!sl.equals("1")){
-            return Msg.Error("权限错误");
+            return Msg.NotLoginError();
         }
         String userid = request.getSession().getAttribute("userid").toString();
         String role = request.getSession().getAttribute("role").toString();
         if(!role.equals("admin")){
             return Msg.Error("权限错误");
         }
-        return (Map<String,Object>)joinPoint.proceed();
+        return joinPoint.proceed();
     }
+
     @Around("loginCheckStudent()")
-    public Map<String,Object> loginStu(ProceedingJoinPoint joinPoint) throws Throwable {
+    public Object loginStu(ProceedingJoinPoint joinPoint) throws Throwable {
         HttpServletRequest request = ((ServletRequestAttributes)RequestContextHolder.getRequestAttributes()).getRequest();
         Object login = request.getSession().getAttribute("login");
         if (login == null) {
-            return Msg.Error("权限错误");
+            return Msg.NotLoginError();
         }
         String sl = login.toString();
         if(!sl.equals("1")){
-            return Msg.Error("权限错误");
+            return Msg.NotLoginError();
         }
         String userid = request.getSession().getAttribute("userid").toString();
         String role = request.getSession().getAttribute("role").toString();
         if(!role.equals("student")){
             return Msg.Error("权限错误");
         }
-        return (Map<String,Object>)joinPoint.proceed();
+        return joinPoint.proceed();
     }
 }
