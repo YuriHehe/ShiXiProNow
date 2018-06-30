@@ -189,16 +189,75 @@
         select
             stu_cls.clsid,
             course.cid,
-            course.cname as course,
+            course.cname        as course,
             course.credit,
-            t.tname as teacher,
+            t.tname             as teacher,
             stu_cls.usual_grade,
             stu_cls.final_grade,
             stu_cls.create_time as grade_time
-        from stu_cls join cls join course join teacher t on cls.tid = t.tid
-            and stu_cls.clsid=cls.clsid and cls.cid=course.cid
+        from stu_cls
+            join cls
+            join course
+            join teacher t on cls.tid = t.tid
+                              and stu_cls.clsid = cls.clsid and cls.cid = course.cid
         where stu_cls.sid = #{stuid,jdbcType=CHAR}
         limit 0, 10
+    </select>
+
+    <!--
+    {
+        class_id:1, // 教学班id
+        term:"20181", // 学期
+        capacity:100, // 可选人数
+        chose_num:100, // 实选人数
+        teacher:"wang", // 任课教师(可能为空)
+        schedule:[
+            {
+                week_range:"1-10", //周次范围
+                day:5, //星期
+                time_range:"1-2", //节次范围
+                address:"A8102", // 上课地点
+            },
+            ...
+        ] // 课表列表
+    }
+    -->
+    <resultMap type="com.pro.ssm.model.custom.extra.Classes" id="ClsDetailInfoMap">
+        <id property="class_id" column="class_id"/>
+        <result property="term" column="term"/>
+        <result property="capacity" column="capacity"/>
+        <result property="chose_num" column="chose_num"/>
+        <result property="teacher" column="teacher"/>
+        <collection property="schedule" ofType="com.pro.ssm.model.custom.extra.Schedule">
+            <result property="start_week" column="start_week"/>
+            <result property="end_week" column="end_week"/>
+            <result property="day" column="day"/>
+            <result property="start_session" column="start_session"/>
+            <result property="end_session" column="end_session"/>
+            <result property="address" column="address"/>
+        </collection>
+    </resultMap>
+    <select id="getClsDetail" resultMap="ClsDetailInfoMap" parameterType="map">
+        select
+            cls.clsid     as class_id,
+            cls.term,
+            cls.capacity,
+            cls.chose_num,
+            teacher.tname as teacher,
+
+            schedule.start_week,
+            schedule.end_week,
+            schedule.day,
+            schedule.start_session,
+            schedule.end_session,
+            schedule.address
+        from cls
+            join course
+            join schedule
+            join teacher
+                on cls.cid = course.cid and schedule.clsid = cls.clsid
+                   and teacher.tid = cls.tid
+        where cls.clsid = #{clsid,jdbcType=INTEGER}
     </select>
 
 </mapper>

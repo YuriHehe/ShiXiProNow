@@ -1,23 +1,19 @@
 package com.pro.ssm.model.custom;
 
-import java.math.BigDecimal;
+import com.pro.ssm.model.custom.extra.Classes;
 
-public class CourseInfo {
-    private int cid; // 课程id
-    private String name; // 课程名称
-    private String teacher; // 教师姓名
+import java.math.BigDecimal;
+import java.util.List;
+
+public class CourseDetailInfo {
+
+
+    private int cid;// 课程id
+    private String name;// 课程名称
     private String department; // 开课学院
     private BigDecimal credit; // 学分
     private BigDecimal hour;//学时
-    private int class_num; //教学班数量
-
-    public int getClass_num() {
-        return class_num;
-    }
-
-    public void setClass_num(int class_num) {
-        this.class_num = class_num;
-    }
+    private List<Classes> classes;
 
     public int getCid() {
         return cid;
@@ -33,14 +29,6 @@ public class CourseInfo {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public String getTeacher() {
-        return teacher;
-    }
-
-    public void setTeacher(String teacher) {
-        this.teacher = teacher;
     }
 
     public String getDepartment() {
@@ -65,5 +53,13 @@ public class CourseInfo {
 
     public void setHour(BigDecimal hour) {
         this.hour = hour;
+    }
+
+    public List<Classes> getClasses() {
+        return classes;
+    }
+
+    public void setClasses(List<Classes> classes) {
+        this.classes = classes;
     }
 }

@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.pro.ssm.dao.MyTeacherDao">
+    <select id="getCourseList" resultType="com.pro.ssm.model.custom.CourseInfo" parameterType="map">
+        select
+            cls.cid,
+            course.cname      as name,
+            departmet.dname   as department,
+            course.credit,
+            course.hour,
+            count(course.cid) as class_num
+        from cls
+            join course
+            join teacher
+            join departmet
+                on cls.cid = course.cid and departmet.did = teacher.did
+                   and course.did = departmet.did
+        where teacher.tid = #{teacher_id,jdbcType=CHAR}
+        group by course.cid
+    </select>
+
+    <select id="searchCourseList" resultType="com.pro.ssm.model.custom.CourseInfo" parameterType="map">
+        select
+            cls.cid,
+            course.cname      as name,
+            departmet.dname   as department,
+            course.credit,
+            course.hour,
+            count(course.cid) as class_num
+        from cls
+            join course
+            join teacher
+            join departmet
+                on cls.cid = course.cid and departmet.did = teacher.did
+                   and course.did = departmet.did
+        where teacher.tid = #{teacher_id,jdbcType=CHAR} and
+              (course.cid = #{key,jdbcType=CHAR} or course.cname like '%${key}%')
+        group by course.cid
+    </select>
+
+    <resultMap type="com.pro.ssm.model.custom.CourseDetailInfo" id="CourseDetailInfoMap">
+        <id property="cid" column="cid"/>
+        <result property="name" column="name"/>
+        <result property="department" column="department"/>
+        <result property="credit" column="credit"/>
+        <result property="hour" column="hour"/>
+        <collection property="classes" ofType="com.pro.ssm.model.custom.extra.Classes">
+            <id property="class_id" column="class_id"/>
+            <result property="term" column="term"/>
+            <result property="capacity" column="capacity"/>
+            <result property="chose_num" column="chose_num"/>
+            <result property="teacher" column="teacher"/>
+            <collection property="schedule" ofType="com.pro.ssm.model.custom.extra.Schedule">
+                <result property="start_week" column="start_week"/>
+                <result property="end_week" column="end_week"/>
+                <result property="day" column="day"/>
+                <result property="start_session" column="start_session"/>
+                <result property="end_session" column="end_session"/>
+                <result property="address" column="address"/>
+            </collection>
+        </collection>
+    </resultMap>
+
+    <select id="getCourseDetail" resultMap="CourseDetailInfoMap" parameterType="map">
+        select
+            course.cid,
+            course.cname    as name,
+            departmet.dname as department,
+            course.credit,
+            course.hour,
+
+            cls.clsid       as class_id,
+            cls.term,
+            cls.capacity,
+            cls.chose_num,
+            teacher.tname   as teacher,
+
+            schedule.start_week,
+            schedule.end_week,
+            schedule.day,
+            schedule.start_session,
+            schedule.end_session,
+            schedule.address
+        from cls
+            join course
+            join teacher
+            join departmet
+            join schedule
+                on cls.cid = course.cid and cls.tid = teacher.tid
+                   and course.did = departmet.did and schedule.clsid = cls.clsid
+        where course.cid = #{cid,jdbcType=INTEGER}
+    </select>
+
+
+    <select id="getTeacherClass" resultType="com.pro.ssm.model.custom.ClsInfo" parameterType="map">
+        select
+            cls.cid,
+            cls.clsid,
+            cls.term,
+            course.cname    as name,
+            departmet.dname as department,
+            course.credit,
+            course.hour,
+            cls.capacity,
+            cls.chose_num
+        from cls
+            join course
+            join teacher
+            join departmet
+                on cls.cid = course.cid and cls.tid = teacher.tid and
+                   course.did = departmet.did
+        where teacher.tid = #{tid,jdbcType=CHAR}
+        limit #{start,jdbcType=INTEGER}, #{n,jdbcType=INTEGER}
+    </select>
+
+    <select id="getClassGradeList" resultType="com.pro.ssm.model.custom.GradeBase" parameterType="map">
+        select
+            stu_cls.sid as stuid,
+            s.sname     as name,
+            stu_cls.usual_grade,
+            stu_cls.final_grade
+        from stu_cls
+            join student s on stu_cls.sid = s.sid
+        where stu_cls.clsid = #{clsid,jdbcType=INTEGER}
+    </select>
+</mapper>
