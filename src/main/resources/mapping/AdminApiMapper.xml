@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.pro.ssm.dao.MyAdminDao">
+    <select id="searchCourseList" resultType="com.pro.ssm.model.custom.CourseInfo" parameterType="map">
+        select
+            cls.cid,
+            course.cname      as name,
+            departmet.dname   as department,
+            course.credit,
+            course.hour,
+            count(course.cid) as class_num
+        from cls
+            join course
+            join departmet
+                on cls.cid = course.cid and course.did = departmet.did
+        where (course.cid = #{key,jdbcType=CHAR} or course.cname like '%${key}%')
+        group by course.cid
+    </select>
+
+    <select id="getCourseList" resultType="com.pro.ssm.model.custom.CourseInfo" parameterType="map">
+        select
+            cls.cid,
+            course.cname      as name,
+            departmet.dname   as department,
+            course.credit,
+            course.hour,
+            count(course.cid) as class_num
+        from cls
+            join course
+            join departmet
+                on cls.cid = course.cid and course.did = departmet.did
+        group by course.cid
+        limit #{start,jdbcType=INTEGER}, #{n,jdbcType=INTEGER}
+    </select>
+
+    <resultMap type="com.pro.ssm.model.custom.CourseDetailInfo" id="CourseDetailInfoMap">
+        <id property="cid" column="cid"/>
+        <result property="name" column="name"/>
+        <result property="credit" column="credit"/>
+        <result property="hour" column="hour"/>
+        <collection property="classes" ofType="com.pro.ssm.model.custom.extra.Classes">
+            <id property="class_id" column="class_id"/>
+            <result property="term" column="term"/>
+            <result property="capacity" column="capacity"/>
+            <result property="chose_num" column="chose_num"/>
+            <result property="teacher" column="teacher"/>
+
+            <result property="avg_usual_grade" column="avg_usual_grade"/>
+            <result property="avg_final_grade" column="avg_final_grade"/>
+
+        </collection>
+    </resultMap>
+
+    <select id="getDeptCourseGrade" resultMap="CourseDetailInfoMap" parameterType="map">
+        select
+            course.cid,
+            course.cname    as name,
+            course.credit,
+            course.hour,
+
+            cls.clsid       as class_id,
+            cls.term,
+            cls.capacity,
+            cls.chose_num,
+            teacher.tname   as teacher,
+
+            avg(stu_cls.usual_grade) as avg_usual_grade,
+            avg(stu_cls.usual_grade) as avg_final_grade
+        from cls
+            join course
+            join teacher
+            join departmet
+            join stu_cls
+                on cls.cid = course.cid and cls.tid = teacher.tid
+                   and course.did = departmet.did and stu_cls.clsid = cls.clsid
+        where departmet.did = #{did,jdbcType=INTEGER}
+        group by stu_cls.clsid
+    </select>
+
+
+
+</mapper>

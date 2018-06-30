@@ -3,10 +3,7 @@ package com.pro.ssm.controller;
 
 import com.pro.ssm.dao.*;
 import com.pro.ssm.model.*;
-import com.pro.ssm.model.custom.ClassTable;
-import com.pro.ssm.model.custom.ClsInfo;
-import com.pro.ssm.model.custom.CourseDetailInfo;
-import com.pro.ssm.model.custom.GradeBase;
+import com.pro.ssm.model.custom.*;
 import com.pro.ssm.util.Msg;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
@@ -59,7 +56,7 @@ public class TeacherController {
     @RequestMapping(value = "/course/search", method = RequestMethod.POST)
     public Map<String, Object> course_search(@RequestParam("key") String key, HttpSession session) {
         String tid = (String) session.getAttribute("userid");
-        List<ClassTable> res = iteacherDao.getCourseList(tid);
+        List<CourseInfo> res = iteacherDao.searchCourseList(tid,key);
         return Msg.Success(res);
     }
 

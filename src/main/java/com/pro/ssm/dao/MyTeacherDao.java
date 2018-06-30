@@ -6,7 +6,7 @@ import org.apache.ibatis.annotations.Param;
 import java.util.List;
 
 public interface MyTeacherDao {
-    List<ClassTable> searchCourseList(@Param("teacher_id") String teacher_id, @Param("key") String key);
+    List<CourseInfo> searchCourseList(@Param("teacher_id") String teacher_id, @Param("key") String key);
 
     List<ClassTable> getCourseList(@Param("teacher_id") String teacher_id);
 

@@ -122,5 +122,6 @@
         from stu_cls
             join student s on stu_cls.sid = s.sid
         where stu_cls.clsid = #{clsid,jdbcType=INTEGER}
+        order by stu_cls.final_grade desc
     </select>
 </mapper>
