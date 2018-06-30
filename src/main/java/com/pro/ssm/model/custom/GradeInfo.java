@@ -5,14 +5,12 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import java.math.BigDecimal;
 import java.util.Date;
 
-public class GradeInfo {
+public class GradeInfo extends GradeBase{
     private int clsid; // 教学班id
     private int cid; // 课程id
     private String course; // 课程名称
     private BigDecimal credit; // 学分
     private String teacher; // 教师姓名
-    private BigDecimal usual_grade; // 平时成绩(可能为空,即未录入)
-    private BigDecimal final_grade; // 期末成绩(可能为空,即未录入)
     private BigDecimal grade; // 最终成绩
     private Date grade_time; // 成绩录入时间
 
@@ -56,25 +54,7 @@ public class GradeInfo {
         this.teacher = teacher;
     }
 
-    public BigDecimal getUsual_grade() {
-        return usual_grade;
-    }
 
-    public void setUsual_grade(BigDecimal usual_grade) {
-        this.usual_grade = usual_grade;
-    }
-
-    public BigDecimal getFinal_grade() {
-        return final_grade;
-    }
-
-    public void setFinal_grade(BigDecimal final_grade) {
-        this.final_grade = final_grade;
-    }
-
-    public BigDecimal getGrade() {
-        return usual_grade != null && final_grade != null ? (usual_grade.add(final_grade)).divide(new BigDecimal(2)) : null;
-    }
 
     public void setGrade(BigDecimal grade) {
         this.grade = grade;

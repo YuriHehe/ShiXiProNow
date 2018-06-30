@@ -1,6 +1,7 @@
 package com.pro.ssm.controller;
 
 import com.pro.ssm.dao.*;
+import com.pro.ssm.model.custom.extra.Classes;
 import com.pro.ssm.util.Msg;
 import com.pro.ssm.model.*;
 import com.pro.ssm.model.custom.*;
@@ -18,7 +19,7 @@ import javax.servlet.http.HttpSession;
 import java.util.*;
 
 @Controller
-@RequestMapping("/user")
+@RequestMapping("/stu")
 public class StuController {
     @Resource
     private StudentMapper stuDao;
@@ -39,14 +40,7 @@ public class StuController {
     @Resource
     private MessageMapper msgDao;
 
-
-    @ResponseBody
-    @RequestMapping(value = "/test", method = RequestMethod.GET)
-    public Map<String, Object> test(HttpServletRequest request, HttpSession session) {
-        session.setAttribute("userid", "1");
-        return Msg.Success("");
-    }
-
+    /*学生账号信息*/
     @ResponseBody
     @RequestMapping(value = "/info", method = RequestMethod.GET)
     public Map<String, Object> info(HttpServletRequest request, HttpSession session) {
@@ -65,6 +59,7 @@ public class StuController {
         });
     }
 
+    /*成绩信息*/
     @ResponseBody
     @RequestMapping(value = "/grade", method = RequestMethod.GET)
     public Map<String, Object> grade(HttpServletRequest request, HttpSession session) {
@@ -73,6 +68,7 @@ public class StuController {
         return Msg.Success(res);
     }
 
+    /*课表信息*/
     @ResponseBody
     @RequestMapping(value = "/class_table", method = RequestMethod.GET)
     public Map<String, Object> class_table(@RequestParam("week") int week, HttpSession session) {
@@ -97,6 +93,7 @@ public class StuController {
         return Msg.Success(cls_tab);
     }
 
+    /*已选教学班信息*/
     @ResponseBody
     @RequestMapping(value = "/course", method = RequestMethod.GET)
     public Map<String, Object> course(HttpServletRequest request, HttpSession session) {
@@ -105,6 +102,7 @@ public class StuController {
         return Msg.Success(res);
     }
 
+    /*可选课程和教学班信息*/
     @ResponseBody
     @RequestMapping(value = "/course_list", method = RequestMethod.GET)
     public Map<String, Object> course_list(HttpServletRequest request, HttpSession session) {
@@ -113,6 +111,15 @@ public class StuController {
         return Msg.Success(res);
     }
 
+    /*教学班信息*/
+    @ResponseBody
+    @RequestMapping(value = "/cls_info", method = RequestMethod.GET)
+    public Map<String, Object> cls_info(@RequestParam("class_id") int clsid) {
+        List<Classes> res = istuDao.getClsDetail(clsid);
+        return Msg.Success(res);
+    }
+
+    /*查询教师开设的教学班*/
     @ResponseBody
     @RequestMapping(value = "/class_search", method = RequestMethod.POST)
     public Map<String, Object> class_search(@RequestParam("tname") String tname) {
@@ -123,8 +130,9 @@ public class StuController {
         return Msg.Success(res);
     }
 
+    /*提交教学班*/
     @ResponseBody
-    @RequestMapping(value = "/commit_class", method = RequestMethod.GET) // todo post
+    @RequestMapping(value = "/commit_class", method = RequestMethod.POST)
     public Map<String, Object> commit_class(@RequestParam("class_id") int class_id, HttpSession session) {
         String stuid = (String) session.getAttribute("userid");
         StuCls stucls = new StuCls();
@@ -141,8 +149,9 @@ public class StuController {
         return Msg.Success();
     }
 
+    /*退选教学班*/
     @ResponseBody
-    @RequestMapping(value = "/del_class", method = RequestMethod.GET) // todo post
+    @RequestMapping(value = "/del_class", method = RequestMethod.POST)
     public Map<String, Object> del_class(@RequestParam("class_id") int class_id, HttpSession session) {
         String stuid = (String) session.getAttribute("userid");
         StuClsKey key = new StuClsKey();
@@ -154,8 +163,9 @@ public class StuController {
         return Msg.Success();
     }
 
+    /*留言*/
     @ResponseBody
-    @RequestMapping(value = "/report_message", method = RequestMethod.GET)  // todo post
+    @RequestMapping(value = "/report_message", method = RequestMethod.POST)
     public Map<String, Object> report_message(@RequestParam("content") String content, HttpSession session) {
         String stuid = (String) session.getAttribute("userid");
         MessageWithBLOBs msg = new MessageWithBLOBs();
@@ -169,6 +179,7 @@ public class StuController {
 
     }
 
+    /*留言列表*/
     @ResponseBody
     @RequestMapping(value = "/message", method = RequestMethod.GET)
     public Map<String, Object> message(HttpServletRequest request, HttpSession session) {
@@ -177,6 +188,7 @@ public class StuController {
         return Msg.Success(res);
     }
 
+    /*详细成绩信息*/
     @ResponseBody
     @RequestMapping(value = "/grade_detail", method = RequestMethod.GET)
     public Map<String, Object> grade_detail(HttpServletRequest request, HttpSession session) {
