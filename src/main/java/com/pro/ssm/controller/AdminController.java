@@ -34,7 +34,6 @@ public class AdminController {
     @Resource
     MsgService msgService;
 
-
     @ResponseBody
     @RequestMapping(value = "/base_info",method = RequestMethod.GET)
     public Map<String,Object> getBaseInfo(HttpServletRequest request, Model model){

@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -22,6 +23,12 @@ public class AppController {
 
     @Resource
     private UserService userService;
+
+    @ResponseBody
+    @RequestMapping(value = "/loginError", method = RequestMethod.GET)
+    public Map<String,Object> loginError(HttpServletResponse response, HttpServletRequest request){
+        return Msg.Error("权限错误");
+    }
 
     @ResponseBody
     @RequestMapping(value = "/login", method = RequestMethod.POST)
