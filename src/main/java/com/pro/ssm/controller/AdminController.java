@@ -1,9 +1,6 @@
 package com.pro.ssm.controller;
 
-import com.pro.ssm.dao.ClsMapper;
-import com.pro.ssm.dao.MyAdminDao;
-import com.pro.ssm.dao.MyTeacherDao;
-import com.pro.ssm.dao.ScheduleMapper;
+import com.pro.ssm.dao.*;
 import com.pro.ssm.model.custom.CourseDetailInfo;
 import com.pro.ssm.model.custom.GradeBase;
 import com.pro.ssm.model.custom.extra.Classes;
@@ -56,15 +53,21 @@ public class AdminController {
     private ClsMapper clsDao;
     @Resource
     private ScheduleMapper scheduleDao;
+    @Resource
+    private SettingsMapper settingDao;
 
     @ResponseBody
     @RequestMapping(value = "/base_info", method = RequestMethod.GET)
     public Map<String, Object> getBaseInfo(HttpServletRequest request, Model model) {
         Map<String, Object> tmp = new HashMap<String, Object>();
+        Settings term = settingDao.selectByPrimaryKey("term");
+        Settings state = settingDao.selectByPrimaryKey("state");
         tmp.put("stu_num", studentService.countStudentNum());
         tmp.put("course_num", courseService.countNum());
         tmp.put("teacher_num", teacherService.countNum());
         tmp.put("class_num", clsService.countNum());
+        tmp.put("term", term.getSvalue());
+        tmp.put("state", Integer.parseInt(state.getSvalue()));
         return Msg.Success("成功获取信息", tmp);
     }
 
@@ -397,7 +400,7 @@ public class AdminController {
 
     /*课程搜索 by wang*/
     @ResponseBody
-    @RequestMapping(value = "/course/search", method = RequestMethod.GET)  // TODO POST
+    @RequestMapping(value = "/course/search", method = RequestMethod.POST)  // TODO POST
     public Map<String, Object> searchCourse(@RequestParam("key") String key) {
         return Msg.Success(iadminDao.searchCourseList(key));
     }
@@ -421,7 +424,7 @@ public class AdminController {
 
     /*增加教学班*/
     @ResponseBody
-    @RequestMapping(value = "/class/add", method = RequestMethod.GET)  // TODO POST
+    @RequestMapping(value = "/class/add", method = RequestMethod.POST)  // TODO POST
     public Map<String, Object> addClass(
             @RequestParam("cid") int cid, @RequestParam("term") String term,
             @RequestParam("capacity") int capacity
@@ -441,7 +444,7 @@ public class AdminController {
 
     /*修改教学班*/
     @ResponseBody
-    @RequestMapping(value = "/class/edit", method = RequestMethod.GET)  // TODO POST
+    @RequestMapping(value = "/class/edit", method = RequestMethod.POST)  // TODO POST
     public Map<String, Object> editClass(
             @RequestParam("id") int clsid, @RequestParam("cid") int cid,
             @RequestParam("term") String term, @RequestParam("capacity") int capacity
@@ -458,7 +461,7 @@ public class AdminController {
 
     /*删除教学班*/
     @ResponseBody
-    @RequestMapping(value = "/class/del", method = RequestMethod.GET)  // TODO POST
+    @RequestMapping(value = "/class/del", method = RequestMethod.POST)  // TODO POST
     public Map<String, Object> delClass(@RequestParam("id") int clsid) {
         int affect_row = clsDao.deleteByPrimaryKey(clsid);
         if (affect_row != 1)
@@ -468,7 +471,7 @@ public class AdminController {
 
     /*增加课表*/
     @ResponseBody
-    @RequestMapping(value = "/schedule/add", method = RequestMethod.GET)  // TODO POST
+    @RequestMapping(value = "/schedule/add", method = RequestMethod.POST)  // TODO POST
     public Map<String, Object> addSchedule(
             @RequestParam("class_id") int clsid,
             @RequestParam("week_range") String week_range,
@@ -504,7 +507,7 @@ public class AdminController {
 
     /*修改课表*/
     @ResponseBody
-    @RequestMapping(value = "/schedule/edit", method = RequestMethod.GET)  // TODO POST
+    @RequestMapping(value = "/schedule/edit", method = RequestMethod.POST)  // TODO POST
     public Map<String, Object> editSchedule(
             @RequestParam("class_id") int clsid,
             @RequestParam("week_range") String week_range,
@@ -540,7 +543,7 @@ public class AdminController {
 
     /*删除课表*/
     @ResponseBody
-    @RequestMapping(value = "/schedule/del", method = RequestMethod.GET)  // TODO POST
+    @RequestMapping(value = "/schedule/del", method = RequestMethod.POST)  // TODO POST
     public Map<String, Object> delSchedule(
             @RequestParam("class_id") int clsid,
             @RequestParam("week_range") String week_range,
@@ -573,14 +576,14 @@ public class AdminController {
 
     /* 查询学院成绩汇总信息*/
     @ResponseBody
-    @RequestMapping(value = "/grade/department", method = RequestMethod.GET)  // TODO POST
+    @RequestMapping(value = "/grade/department", method = RequestMethod.POST)  // TODO POST
     public Map<String, Object> departmentGrade(@RequestParam("did") int did) {
         return Msg.Success(iadminDao.getDeptCourseGrade(did));
     }
 
     /* 查询教学班成绩汇总信息*/
     @ResponseBody
-    @RequestMapping(value = "/grade/class", method = RequestMethod.GET)  // TODO POST
+    @RequestMapping(value = "/grade/class", method = RequestMethod.POST)  // TODO POST
     public Map<String, Object> classGrade(@RequestParam("class_id") int clsid) {
         return Msg.Success(iteacherDao.getClassGradeList(clsid));
     }
@@ -652,6 +655,7 @@ public class AdminController {
             put("grade", "最终成绩");
         }
     };
+
     /* 导出教学班成绩汇总信息 */
     @ResponseBody
     @RequestMapping(value = "/grade/class/output", method = RequestMethod.GET)
@@ -688,4 +692,26 @@ public class AdminController {
         return Msg.Success();
     }
 
+
+    /* 修改学期 */
+    @ResponseBody
+    @RequestMapping(value = "/set_term", method = RequestMethod.POST)
+    public Map<String, Object> setTerm(@RequestParam("term") String term) {
+        Settings s = new Settings();
+        s.setSkey("term");
+        s.setSvalue(term);
+        settingDao.updateByPrimaryKey(s);
+        return Msg.Success();
+    }
+
+    /* 修改当前系统状态 */
+    @ResponseBody
+    @RequestMapping(value = "/set_state", method = RequestMethod.POST) // todo post
+    public Map<String, Object> setState(@RequestParam("state") String state) {
+        Settings s = new Settings();
+        s.setSkey("state");
+        s.setSvalue(state);
+        settingDao.updateByPrimaryKey(s);
+        return Msg.Success();
+    }
 }

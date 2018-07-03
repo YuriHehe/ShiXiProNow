@@ -75,6 +75,7 @@ public class AppController {
         String role = request.getParameter("role");
         //检查是否存在于数据库
         Map<String, Object> res = userService.userCheck(userid, MD5Util.crypt(password), role);
+        // System.out.println(MD5Util.crypt(password));
         if (res.get("code").equals(200)) {
             request.getSession().setAttribute("login", "1");
             request.getSession().setAttribute("userid", userid);

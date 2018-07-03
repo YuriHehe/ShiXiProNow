@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.pro.ssm.dao.SettingsMapper" >
+  <resultMap id="BaseResultMap" type="com.pro.ssm.model.Settings" >
+    <id column="skey" property="skey" jdbcType="CHAR" />
+    <result column="svalue" property="svalue" jdbcType="CHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    skey, svalue
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from settings
+    where skey = #{skey,jdbcType=CHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from settings
+    where skey = #{skey,jdbcType=CHAR}
+  </delete>
+  <insert id="insert" parameterType="com.pro.ssm.model.Settings" >
+    insert into settings (skey, svalue)
+    values (#{skey,jdbcType=CHAR}, #{svalue,jdbcType=CHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.pro.ssm.model.Settings" >
+    insert into settings
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="skey != null" >
+        skey,
+      </if>
+      <if test="svalue != null" >
+        svalue,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="skey != null" >
+        #{skey,jdbcType=CHAR},
+      </if>
+      <if test="svalue != null" >
+        #{svalue,jdbcType=CHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.pro.ssm.model.Settings" >
+    update settings
+    <set >
+      <if test="svalue != null" >
+        svalue = #{svalue,jdbcType=CHAR},
+      </if>
+    </set>
+    where skey = #{skey,jdbcType=CHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.pro.ssm.model.Settings" >
+    update settings
+    set svalue = #{svalue,jdbcType=CHAR}
+    where skey = #{skey,jdbcType=CHAR}
+  </update>
+</mapper>
