@@ -52,12 +52,14 @@ public class TeacherController {
         });
     }
 
+    /*搜索教师*/
     @ResponseBody
     @RequestMapping(value = "/teacher/search", method = RequestMethod.POST)
     public Map<String, Object> searchTeacher(HttpServletRequest request, Model model){
         return new AdminController().searchTeacher(request, model);
     }
 
+    /*教师列表*/
     @ResponseBody
     @RequestMapping(value = "/teacher/list", method = RequestMethod.POST)
     public Map<String, Object> listTeacher(HttpServletRequest request, Model model){

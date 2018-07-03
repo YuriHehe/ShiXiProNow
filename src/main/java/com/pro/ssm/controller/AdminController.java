@@ -68,6 +68,7 @@ public class AdminController {
         tmp.put("class_num", clsService.countNum());
         tmp.put("term", term.getSvalue());
         tmp.put("state", Integer.parseInt(state.getSvalue()));
+        tmp.put("dept_info",iadminDao.deptCourseInfo());
         return Msg.Success("成功获取信息", tmp);
     }
 

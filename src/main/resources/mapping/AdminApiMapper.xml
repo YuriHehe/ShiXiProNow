@@ -1,20 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.pro.ssm.dao.MyAdminDao">
-    <select id="searchCourseList" resultType="com.pro.ssm.model.custom.CourseInfo" parameterType="map">
+
+
+    <select id="deptCourseInfo" resultType="com.pro.ssm.model.custom.DeptCourseInfo" parameterType="map">
         select
-            cls.cid,
-            course.cname      as name,
-            departmet.dname   as department,
-            course.credit,
-            course.hour,
-            count(course.cid) as class_num
-        from cls
+            departmet.did,
+            departmet.dname,
+            count(course.cid) as course_num,
+            sum(cls.capacity) as capacity,
+            sum(cls.chose_num) as chose_num
+        from departmet
             join course
-            join departmet
+            join cls
                 on cls.cid = course.cid and course.did = departmet.did
-        where (course.cid = #{key,jdbcType=CHAR} or course.cname like '%${key}%')
-        group by course.cid
+        group by departmet.did
     </select>
 
     <select id="getCourseList" resultType="com.pro.ssm.model.custom.CourseInfo" parameterType="map">
