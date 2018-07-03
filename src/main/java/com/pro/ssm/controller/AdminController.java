@@ -4,6 +4,11 @@ import com.pro.ssm.dao.ClsMapper;
 import com.pro.ssm.dao.MyAdminDao;
 import com.pro.ssm.dao.MyTeacherDao;
 import com.pro.ssm.dao.ScheduleMapper;
+import com.pro.ssm.model.custom.CourseDetailInfo;
+import com.pro.ssm.model.custom.GradeBase;
+import com.pro.ssm.model.custom.extra.Classes;
+import com.pro.ssm.util.BeanUtil;
+import com.pro.ssm.util.ExcelUtil;
 import com.pro.ssm.util.Msg;
 import com.pro.ssm.model.*;
 import com.pro.ssm.service.*;
@@ -16,7 +21,12 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -88,7 +98,7 @@ public class AdminController {
             tt.put("grade", i.getGrade());
             tt.put("start_year", i.getStartYear());
             tt.put("sex", i.getSex());
-            tt.put("class", i.getClass());
+            tt.put("class_name", i.getClass());
             tmp.add(tt);
         }
         return Msg.Success("成功获取信息", tmp);
@@ -571,8 +581,111 @@ public class AdminController {
     /* 查询教学班成绩汇总信息*/
     @ResponseBody
     @RequestMapping(value = "/grade/class", method = RequestMethod.GET)  // TODO POST
-    public Map<String, Object> classGrade(@RequestParam("cls_id") int clsid) {
+    public Map<String, Object> classGrade(@RequestParam("class_id") int clsid) {
         return Msg.Success(iteacherDao.getClassGradeList(clsid));
+    }
+
+    static Map<String, String> department_grade_map = new HashMap<String, String>() {
+        {
+            put("cid", "课程id");
+            put("name", "课程名称");
+            put("credit", "学分");
+            put("hour", "学分");
+            put("class_id", "教学班id");
+            put("teacher", "教师姓名");
+            put("term", "学期");
+            put("chose_num", "班级人数");
+            put("avg_usual_grade", "平均平时成绩");
+            put("avg_final_grade", "平均平时成绩");
+            put("avg_grade", "平均成绩");
+        }
+    };
+
+    /* 导出学院成绩汇总信息 */
+    @ResponseBody
+    @RequestMapping(value = "/grade/department/output", method = RequestMethod.GET)
+    public Map<String, Object> departmentGradeOutput(
+            @RequestParam("did") int did,
+            HttpServletResponse response
+    ) {
+        List<CourseDetailInfo> res = iadminDao.getDeptCourseGrade(did);
+        ArrayList<Map<String, Object>> grade_maps = new ArrayList<Map<String, Object>>();
+        for (CourseDetailInfo c : res) {
+            Map<String, Object> cmap = BeanUtil.transBean2Map(c);
+            cmap.remove("classes");
+            for (Classes cls : c.getClasses()) {
+                Map<String, Object> clsmap = BeanUtil.transBean2Map(cls);
+                clsmap.putAll(cmap);
+                grade_maps.add(clsmap);
+            }
+        }
+
+        try {
+            response.setHeader("content-disposition",
+                    "attachment;filename=" + URLEncoder.encode(did + "学院成绩汇总信息.xls", "utf-8"));
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+
+        OutputStream out = null;
+        try {
+            out = response.getOutputStream();
+            ExcelUtil.writeXls(grade_maps, did + "学院成绩汇总信息", department_grade_map, out);
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                out.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return Msg.Success(grade_maps);
+    }
+
+    static Map<String, String> class_grade_map = new HashMap<String, String>() {
+        {
+            put("stuid", "学生ID");
+            put("name", "学生姓名");
+            put("usual_grade", "平时成绩");
+            put("final_grade", "期末成绩");
+            put("grade", "最终成绩");
+        }
+    };
+    /* 导出教学班成绩汇总信息 */
+    @ResponseBody
+    @RequestMapping(value = "/grade/class/output", method = RequestMethod.GET)
+    public Map<String, Object> classGradeOutput(
+            @RequestParam("cls_id") int clsid,
+            HttpServletResponse response
+    ) {
+        List<GradeBase> res = iteacherDao.getClassGradeList(clsid);
+        ArrayList<Map<String, Object>> grade_maps = new ArrayList<Map<String, Object>>();
+        for (GradeBase g : res) {
+            grade_maps.add(BeanUtil.transBean2Map(g));
+        }
+
+        try {
+            response.setHeader("content-disposition",
+                    "attachment;filename=" + URLEncoder.encode("教学班" + clsid + "成绩汇总信息.xls", "utf-8"));
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+
+        OutputStream out = null;
+        try {
+            out = response.getOutputStream();
+            ExcelUtil.writeXls(grade_maps, "教学班" + clsid + "成绩汇总信息", class_grade_map, out);
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                out.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return Msg.Success();
     }
 
 }

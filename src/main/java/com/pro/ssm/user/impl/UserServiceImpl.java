@@ -32,15 +32,15 @@ public class UserServiceImpl implements UserService {
         }
         //更改密码
         do {
-            if (role == "teacher") {
+            if (role.equals("teacher")) {
                 teacherService.changePsd(userid, newpsd);
                 break;
             }
-            if (role == "student") {
+            if (role.equals("student")) {
                 studentService.changePsd(userid, newpsd);
                 break;
             }
-            if (role == "admin") {
+            if (role.equals("admin")) {
                 adminService.changePsd(userid, newpsd);
                 break;
             }

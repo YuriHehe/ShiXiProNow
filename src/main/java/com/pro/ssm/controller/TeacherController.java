@@ -7,6 +7,7 @@ import com.pro.ssm.model.custom.*;
 import com.pro.ssm.util.Msg;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -49,6 +50,18 @@ public class TeacherController {
                 put("address", t.getAddress());
             }
         });
+    }
+
+    @ResponseBody
+    @RequestMapping(value = "/teacher/search", method = RequestMethod.POST)
+    public Map<String, Object> searchTeacher(HttpServletRequest request, Model model){
+        return new AdminController().searchTeacher(request, model);
+    }
+
+    @ResponseBody
+    @RequestMapping(value = "/teacher/list", method = RequestMethod.POST)
+    public Map<String, Object> listTeacher(HttpServletRequest request, Model model){
+        return new AdminController().listTeacher(request, model);
     }
 
     /*课程搜索*/
