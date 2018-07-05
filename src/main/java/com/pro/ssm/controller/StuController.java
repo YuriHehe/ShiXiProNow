@@ -8,10 +8,7 @@ import com.pro.ssm.model.custom.*;
 import com.pro.ssm.util.GradeTool;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -19,6 +16,7 @@ import javax.servlet.http.HttpSession;
 import java.util.*;
 
 @Controller
+@CrossOrigin(maxAge = 3600)
 @RequestMapping("/stu")
 public class StuController {
     @Resource

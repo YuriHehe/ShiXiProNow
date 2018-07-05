@@ -10,9 +10,8 @@
             count(course.cid) as course_num,
             sum(cls.capacity) as capacity,
             sum(cls.chose_num) as chose_num
-        from departmet
-            join course
-            join cls
+        from departmet left join
+            (course join cls)
                 on cls.cid = course.cid and course.did = departmet.did
         group by departmet.did
     </select>
