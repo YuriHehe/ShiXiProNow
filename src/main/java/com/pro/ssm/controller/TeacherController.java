@@ -1,10 +1,14 @@
 package com.pro.ssm.controller;
 
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.pro.ssm.dao.*;
 import com.pro.ssm.model.*;
 import com.pro.ssm.model.custom.*;
 import com.pro.ssm.util.Msg;
+import org.springframework.http.HttpEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
@@ -19,6 +23,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.math.BigDecimal;
 import java.util.*;
+
+import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 @Controller
 @RequestMapping("/teacher")
@@ -139,33 +145,26 @@ public class TeacherController {
     /*成绩录入*/
     @ResponseBody
     @Transactional
-    @RequestMapping(value = "/commit_grade", method = RequestMethod.POST)
-    public Map<String, Object> commit_grade(@RequestParam("id") int clsid, HttpSession session, HttpServletRequest request) {
+    @RequestMapping(value = "/commit_grade", method = RequestMethod.POST, consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
+    public Map<String, Object> commit_grade(HttpSession session, HttpEntity<String> httpEntity) {
         String tid = (String) session.getAttribute("userid");
-        Cls cls = clsDao.selectByPrimaryKey(clsid);
+        JSONObject json = JSON.parseObject(httpEntity.getBody()); //反序列化
+        Cls cls = clsDao.selectByPrimaryKey(json.getInteger("cls_id"));
         if (cls == null || !(cls.getTid().equals(tid)))
             return Msg.Error("教学班不存在或者您不是教学班的任课教师");
 
-        Map<String, String[]> res = request.getParameterMap();
+
         StuClsKey k = new StuClsKey();
-        k.setClsid(clsid);
-        Set<String> used = new HashSet<String>();
-        for (String key : res.keySet()) {
-            String stuid;
-            try {
-                stuid = key.substring(6);
-            } catch (IndexOutOfBoundsException e) {
-                continue;
-            }
-            if (!used.contains(stuid)) {
-                used.add(stuid);
-                k.setSid(stuid);
-                StuCls s = stuclsDao.selectByPrimaryKey(k);
-                s.setUsualGrade(new BigDecimal(res.get("usual_" + stuid)[0]));
-                s.setFinalGrade(new BigDecimal(res.get("final_" + stuid)[0]));
-                s.setCreateTime(new Date());
-                stuclsDao.updateByPrimaryKeySelective(s);
-            }
+        k.setClsid(json.getInteger("cls_id"));
+        JSONArray grades = json.getJSONArray("grades");
+        for(int i=0;i<grades.size();i++){
+            JSONObject g = grades.getJSONObject(i);
+            k.setSid(g.getString("stuid"));
+            StuCls s = stuclsDao.selectByPrimaryKey(k);
+            s.setUsualGrade(new BigDecimal(g.getString("usual_grade")));
+            s.setFinalGrade(new BigDecimal(g.getString("final_grade")));
+            s.setCreateTime(new Date());
+            stuclsDao.updateByPrimaryKeySelective(s);
         }
         return Msg.Success("录入成绩成功");
     }

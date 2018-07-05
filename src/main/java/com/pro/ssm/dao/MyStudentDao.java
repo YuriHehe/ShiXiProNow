@@ -9,7 +9,7 @@ import java.util.List;
 public interface MyStudentDao {
     List<ClassTable> getClasstabeByStuid(@Param("stuid") String stuid, @Param("week") int week);
 
-    List<CourseInfo> getStuCourseByStuid(@Param("stuid") String stuid);
+    List<CourseInfoWithCls> getStuCourseByStuid(@Param("stuid") String stuid);
 
     List<CourseInfo> getStuAvailableCourseByStuid(@Param("stuid") String stuid);
 

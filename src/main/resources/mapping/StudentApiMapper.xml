@@ -44,9 +44,10 @@
         hour:64 //学时
     }
     -->
-    <select id="getStuCourseByStuid" resultType="com.pro.ssm.model.custom.CourseInfo" parameterType="map">
+    <select id="getStuCourseByStuid" resultType="com.pro.ssm.model.custom.CourseInfoWithCls" parameterType="map">
         select
             cls.cid,
+            cls.clsid,
             course.cname    as name,
             teacher.tname   as teacher,
             departmet.dname as department,

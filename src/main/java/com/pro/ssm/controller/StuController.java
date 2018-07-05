@@ -38,6 +38,8 @@ public class StuController {
     @Resource
     private MyStudentDao istuDao;
     @Resource
+    private MyTeacherDao iteacherDao;
+    @Resource
     private MessageMapper msgDao;
 
     /*学生账号信息*/
@@ -98,7 +100,7 @@ public class StuController {
     @RequestMapping(value = "/course", method = RequestMethod.GET)
     public Map<String, Object> course(HttpServletRequest request, HttpSession session) {
         String stuid = (String) session.getAttribute("userid");
-        List<CourseInfo> res = istuDao.getStuCourseByStuid(stuid);
+        List<CourseInfoWithCls> res = istuDao.getStuCourseByStuid(stuid);
         return Msg.Success(res);
     }
 
@@ -109,6 +111,13 @@ public class StuController {
         String stuid = (String) session.getAttribute("userid");
         List<CourseInfo> res = istuDao.getStuAvailableCourseByStuid(stuid);
         return Msg.Success(res);
+    }
+
+    /*课程信息*/
+    @ResponseBody
+    @RequestMapping(value = "/course_info", method = RequestMethod.GET)
+    public Map<String, Object> infoCourse(@RequestParam("cid") int cid) {
+        return Msg.Success(iteacherDao.getCourseDetail(cid));
     }
 
     /*教学班信息*/
