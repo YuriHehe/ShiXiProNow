@@ -8,6 +8,7 @@ import com.pro.ssm.model.custom.*;
 import com.pro.ssm.util.GradeTool;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -139,9 +140,17 @@ public class StuController {
 
     /*提交教学班*/
     @ResponseBody
+    @Transactional
     @RequestMapping(value = "/commit_class", method = RequestMethod.POST)
     public Map<String, Object> commit_class(@RequestParam("class_id") int class_id, HttpSession session) {
         String stuid = (String) session.getAttribute("userid");
+        Cls cls = clsDao.selectByPrimaryKey(class_id);
+        if(cls.getChoseNum()>=cls.getCapacity()){
+            return Msg.Error("选课人数已满");
+        }
+        cls.setChoseNum(cls.getChoseNum()+1);
+        clsDao.updateByPrimaryKeySelective(cls);
+
         StuCls stucls = new StuCls();
         stucls.setSid(stuid);
         stucls.setClsid(class_id);
@@ -158,9 +167,14 @@ public class StuController {
 
     /*退选教学班*/
     @ResponseBody
+    @Transactional
     @RequestMapping(value = "/del_class", method = RequestMethod.POST)
     public Map<String, Object> del_class(@RequestParam("class_id") int class_id, HttpSession session) {
         String stuid = (String) session.getAttribute("userid");
+        Cls cls = clsDao.selectByPrimaryKey(class_id);
+        cls.setChoseNum(cls.getChoseNum()-1);
+        clsDao.updateByPrimaryKeySelective(cls);
+
         StuClsKey key = new StuClsKey();
         key.setSid(stuid);
         key.setClsid(class_id);

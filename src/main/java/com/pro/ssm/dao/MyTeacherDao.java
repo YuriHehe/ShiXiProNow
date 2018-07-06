@@ -8,11 +8,13 @@ import java.util.List;
 public interface MyTeacherDao {
     List<CourseInfo> searchCourseList(@Param("teacher_id") String teacher_id, @Param("key") String key);
 
-    List<ClassTable> getCourseList(@Param("teacher_id") String teacher_id);
+    List<ClassTable> getCourseList(@Param("teacher_id") String teacher_id, @Param("start") int start ,@Param("n") int n);
 
     List<CourseDetailInfo> getCourseDetail(@Param("cid") Integer cid);
 
     List<ClsInfo> getTeacherClass(@Param("tid") String tid, @Param("start") int start, @Param("n") int n);
 
     List<GradeBase> getClassGradeList(@Param("clsid") Integer clsid);
+
+    List<ClassTable> getClasstabeByTid(@Param("tid") String tid, @Param("week") int week);
 }

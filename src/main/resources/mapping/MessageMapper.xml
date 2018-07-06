@@ -4,8 +4,8 @@
   <resultMap id="BaseResultMap" type="com.pro.ssm.model.Message" >
     <id column="msg_id" property="msgId" jdbcType="INTEGER" />
     <result column="sid" property="sid" jdbcType="CHAR" />
-    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
-    <result column="reply_time" property="replyTime" jdbcType="TIMESTAMP" />
+    <result column="create_time" property="createTime" jdbcType="DATE" />
+    <result column="reply_time" property="replyTime" jdbcType="DATE" />
   </resultMap>
   <resultMap id="ResultMapWithBLOBs" type="com.pro.ssm.model.MessageWithBLOBs" extends="BaseResultMap" >
     <result column="content" property="content" jdbcType="LONGVARCHAR" />
@@ -117,7 +117,11 @@
       reply_time = #{replyTime,jdbcType=TIMESTAMP}
     where msg_id = #{msgId,jdbcType=INTEGER}
   </update>
-  <select id="selectUnReply" resultType="com.pro.ssm.model.MessageWithBLOBs">
-    select * from message where reply is null limit #{num}
+  <select id="selectUnReply" resultMap="ResultMapWithBLOBs">
+    select
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from message where reply is null limit #{num}
   </select>
 </mapper>

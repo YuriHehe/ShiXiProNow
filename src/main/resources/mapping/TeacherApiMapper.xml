@@ -17,6 +17,7 @@
                    and course.did = departmet.did
         where teacher.tid = #{teacher_id,jdbcType=CHAR}
         group by course.cid
+        limit #{start,jdbcType=INTEGER}, #{n,jdbcType=INTEGER}
     </select>
 
     <select id="searchCourseList" resultType="com.pro.ssm.model.custom.CourseInfo" parameterType="map">
@@ -123,5 +124,25 @@
             join student s on stu_cls.sid = s.sid
         where stu_cls.clsid = #{clsid,jdbcType=INTEGER}
         order by stu_cls.final_grade desc
+    </select>
+
+    <select id="getClasstabeByTid" resultType="com.pro.ssm.model.custom.ClassTable" parameterType="map">
+        select
+            cls.cid,
+            course.cname  as course,
+            teacher.tname as teacher,
+            schedule.day,
+            schedule.start_session,
+            schedule.end_session,
+            schedule.address
+        from cls
+            join course
+            join teacher
+            join schedule
+                on cls.clsid = schedule.clsid and cls.cid = course.cid
+                   and cls.tid = teacher.tid
+        where teacher.tid = #{tid,jdbcType=CHAR} and schedule.start_week &lt;= #{week,jdbcType=INTEGER}
+              and schedule.end_week &gt;= #{week,jdbcType=INTEGER}
+        order by schedule.start_session
     </select>
 </mapper>

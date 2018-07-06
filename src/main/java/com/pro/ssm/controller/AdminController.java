@@ -6,6 +6,7 @@ import com.pro.ssm.model.custom.GradeBase;
 import com.pro.ssm.model.custom.extra.Classes;
 import com.pro.ssm.util.BeanUtil;
 import com.pro.ssm.util.ExcelUtil;
+import com.pro.ssm.util.MD5Util;
 import com.pro.ssm.util.Msg;
 import com.pro.ssm.model.*;
 import com.pro.ssm.service.*;
@@ -46,6 +47,8 @@ public class AdminController {
     @Resource
     private MyAdminDao iadminDao;
     @Resource
+    private DepartmetMapper departmetDao;
+    @Resource
     private MyTeacherDao iteacherDao;
     @Resource
     private ClsMapper clsDao;
@@ -66,7 +69,7 @@ public class AdminController {
         tmp.put("class_num", clsService.countNum());
         tmp.put("term", term.getSvalue());
         tmp.put("state", Integer.parseInt(state.getSvalue()));
-        tmp.put("dept_info",iadminDao.deptCourseInfo());
+        tmp.put("dept_info", iadminDao.deptCourseInfo());
         return Msg.Success("成功获取信息", tmp);
     }
 
@@ -150,17 +153,35 @@ public class AdminController {
 
     @ResponseBody
     @RequestMapping(value = "/stu/add", method = RequestMethod.POST)
-    public Map<String, Object> addStudent(HttpServletRequest request, Model model) {
+    public Map<String, Object> addStudent(
+            @RequestParam("stu_id") String stu_id,
+            @RequestParam("name") String name,
+            @RequestParam("department") String dname,
+            @RequestParam("sex") String sex,
+            @RequestParam("grade") int grade,
+            @RequestParam("start_year") int start_year,
+            @RequestParam("class") String class_name,
+            @RequestParam("password") String pwd
+    ) {
+        List<Departmet> dids = departmetDao.selectAll();
+        int did = -1;
+        for (Departmet d : dids) {
+            if (d.getDname().equals(dname)) {
+                did = d.getDid();
+                break;
+            }
+        }
+        if (did == -1)
+            did = 1;
         Student stu = new Student();
-        //读取
-        stu.setSid(request.getParameter("stu_id"));
-        stu.setSname(request.getParameter("name"));
-        stu.setDid(Integer.parseInt(request.getParameter("did")));
-        stu.setSex(request.getParameter("sex"));
-        stu.setGrade(Integer.parseInt(request.getParameter("grade")));
-        stu.setStartYear(Integer.parseInt(request.getParameter("start_year")));
-        stu.setClsName(request.getParameter("class"));
-        stu.setPassword(request.getParameter("password"));
+        stu.setSid(stu_id);
+        stu.setSname(name);
+        stu.setDid(did);
+        stu.setSex(sex);
+        stu.setGrade(grade);
+        stu.setStartYear(start_year);
+        stu.setClsName(class_name);
+        stu.setPassword(MD5Util.crypt(pwd));
         //添加
         boolean tag = studentService.insertUser(stu);
         if (tag == true) {
@@ -172,18 +193,39 @@ public class AdminController {
 
     @ResponseBody
     @RequestMapping(value = "/stu/edit", method = RequestMethod.POST)
-    public Map<String, Object> editStudent(HttpServletRequest request, Model model) {
-        String psd = request.getParameter("password");
+    public Map<String, Object> editStudent(
+            @RequestParam("stu_id") String stu_id,
+            @RequestParam("name") String name,
+            @RequestParam("department") String dname,
+            @RequestParam("sex") String sex,
+            @RequestParam("grade") int grade,
+            @RequestParam("start_year") int start_year,
+            @RequestParam("class") String class_name,
+            @RequestParam(value = "password", defaultValue = "") String pwd
+    ) {
+        List<Departmet> dids = departmetDao.selectAll();
+        int did = -1;
+        for (Departmet d : dids) {
+            if (d.getDname().equals(dname)) {
+                did = d.getDid();
+                break;
+            }
+        }
+        if (did == -1)
+            did = 1;
+
         Student stu = new Student();
-        //读取
-        stu.setSid(request.getParameter("stu_id"));
-        stu.setPassword(request.getParameter("password"));
-        stu.setDid(Integer.parseInt(request.getParameter("did")));
-        stu.setSex(request.getParameter("sex"));
-        stu.setGrade(Integer.parseInt(request.getParameter("grade")));
-        stu.setStartYear(Integer.parseInt(request.getParameter("start_year")));
-        stu.setClsName(request.getParameter("class"));
-        stu.setPassword(request.getParameter("password"));
+        stu.setSid(stu_id);
+        stu.setSname(name);
+        stu.setDid(did);
+        stu.setSex(sex);
+        stu.setGrade(grade);
+        stu.setStartYear(start_year);
+        stu.setClsName(class_name);
+        if (pwd != null && pwd.length() > 0) {
+            stu.setPassword(MD5Util.crypt(pwd));
+        }
+
         //更新
         boolean tag = studentService.updateUser(stu);
         if (tag == true) {
@@ -194,7 +236,7 @@ public class AdminController {
     }
 
     @ResponseBody
-    @RequestMapping(value = "/stu/del_stu", method = RequestMethod.POST)
+    @RequestMapping(value = "/del_stu", method = RequestMethod.POST)
     public Map<String, Object> delStudent(HttpServletRequest request, Model model) {
         Map<String, Object> res = new HashMap<String, Object>();
         String stuId = request.getParameter("stu_id");
@@ -209,21 +251,7 @@ public class AdminController {
     @ResponseBody
     @RequestMapping(value = "/message/list", method = RequestMethod.GET)
     public Map<String, Object> showMessageList() {
-        List<MessageWithBLOBs> res = msgService.selectUnReply(10);
-        List<Map<String, Object>> tmp = new ArrayList<Map<String, Object>>();
-        for (MessageWithBLOBs i : res) {
-            Map<String, Object> tt = new HashMap<String, Object>();
-            tt.put("id", i.getMsgId());
-            tt.put("stuid", i.getSid());
-            String sname = studentService.getSname(i.getSid());
-            tt.put("stu_name", sname);
-            tt.put("content", i.getContent());
-            tt.put("reply", i.getReply());
-            tt.put("reply_time", i.getReplyTime());
-            tt.put("create_time", i.getCreateTime());
-            tmp.add(tt);
-        }
-        return Msg.Success("成功获取信息", tmp);
+        return Msg.Success("成功获取信息", iadminDao.getMessage());
     }
 
     @ResponseBody
@@ -244,10 +272,10 @@ public class AdminController {
     public Map<String, Object> addTeacher(HttpServletRequest request, Model model) {
         Teacher res = new Teacher();
         res.setTid(request.getParameter("tid"));
-        res.setPassword(request.getParameter("password"));
+        res.setPassword(MD5Util.crypt(request.getParameter("password")));
         res.setTname(request.getParameter("name"));
         res.setTitle(request.getParameter("title"));
-        res.setDid(Integer.parseInt(request.getParameter("did")));
+        res.setDid(Integer.parseInt("1"));  // todo
         res.setContact(request.getParameter("contact"));
         res.setAddress(request.getParameter("address"));
         boolean tag = teacherService.insertUser(res);

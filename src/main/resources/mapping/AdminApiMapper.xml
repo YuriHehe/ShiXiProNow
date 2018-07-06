@@ -2,6 +2,24 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.pro.ssm.dao.MyAdminDao">
 
+    <select id="searchCourseList" resultType="com.pro.ssm.model.custom.CourseInfo" parameterType="map">
+        select
+            cls.cid,
+            course.cname      as name,
+            departmet.dname   as department,
+            course.credit,
+            course.hour,
+            count(course.cid) as class_num
+        from cls
+            join course
+            join teacher
+            join departmet
+                on cls.cid = course.cid and departmet.did = teacher.did
+                   and course.did = departmet.did
+        where (course.cid = #{key,jdbcType=CHAR} or course.cname like '%${key}%')
+        group by course.cid
+    </select>
+
 
     <select id="deptCourseInfo" resultType="com.pro.ssm.model.custom.DeptCourseInfo" parameterType="map">
         select
@@ -76,6 +94,21 @@
         group by stu_cls.clsid
     </select>
 
+
+    <select id="getMessage" resultType="com.pro.ssm.model.custom.MessageInfo" parameterType="map">
+        select
+            msg_id  as id,
+            s.sname as stu_name,
+            content,
+            reply,
+            create_time,
+            reply_time
+        from message
+            join student s on message.sid = s.sid
+        where reply is null
+        order by create_time desc
+        limit 0, 10
+    </select>
 
 
 </mapper>

@@ -1,5 +1,11 @@
 package com.pro.ssm.controller;
 
+import com.pro.ssm.model.Admin;
+import com.pro.ssm.model.Student;
+import com.pro.ssm.model.Teacher;
+import com.pro.ssm.service.AdminService;
+import com.pro.ssm.service.StudentService;
+import com.pro.ssm.service.TeacherService;
 import com.pro.ssm.util.ExcelUtil;
 import com.pro.ssm.util.MD5Util;
 import com.pro.ssm.util.Msg;
@@ -26,6 +32,15 @@ public class AppController {
 
     @Resource
     private UserService userService;
+
+    @Resource
+    private AdminService adminService;
+
+    @Resource
+    private StudentService studentService;
+
+    @Resource
+    private TeacherService teacherService;
 
     @ResponseBody
     @RequestMapping(value = "/testDownload", method = RequestMethod.GET)
@@ -71,14 +86,49 @@ public class AppController {
         String userid = request.getParameter("userid");
         String password = request.getParameter("password");
         String role = request.getParameter("role");
+        password = MD5Util.crypt(password);
+        Map<String, Object> res;
+        String username = "";
         //检查是否存在于数据库
-        Map<String, Object> res = userService.userCheck(userid, MD5Util.crypt(password), role);
-        // System.out.println(MD5Util.crypt(password));
+        if (role.equals("admin")) {
+            Admin tmp = adminService.getUserById(userid);
+            if (tmp == null) {
+                res = Msg.Error("不存在用户名");
+            } else if (password.equals(tmp.getPassword())) {
+                res = Msg.Success("成功", null);
+                username = "管理员";
+            } else {
+                res = Msg.Error("错误密码");
+            }
+        } else if (role.equals("student")) {
+            Student tmp = studentService.getUserById(userid);
+            if (tmp == null) {
+                res = Msg.Error("不存在用户名");
+            } else if (password.equals(tmp.getPassword())) {
+                res = Msg.Success("成功", null);
+                username = tmp.getSname();
+            } else {
+                res = Msg.Error("错误密码");
+            }
+        } else if (role.equals("teacher")) {
+            Teacher tmp = teacherService.getUserById(userid);
+            if (tmp == null) {
+                res = Msg.Error("不存在用户名");
+            } else if (password.equals(tmp.getPassword())) {
+                res = Msg.Success("成功", null);
+                username =tmp.getTname();
+            } else {
+                res = Msg.Error("错误密码");
+            }
+        } else {
+            res = Msg.Error("错误的用户类型");
+        }
+        res.put("user_name",username);
+
         if (res.get("code").equals(200)) {
             request.getSession().setAttribute("login", "1");
             request.getSession().setAttribute("userid", userid);
             request.getSession().setAttribute("role", role);
-            return Msg.Success("登陆成功");
         }
         return res;
     }
@@ -99,7 +149,7 @@ public class AppController {
         String role = request.getSession().getAttribute("role").toString();
         String oldpsd = request.getParameter("old");
         String newpsd = request.getParameter("new");
-        return userService.change_password(userid, role, MD5Util.crypt(oldpsd), MD5Util.crypt(oldpsd));
+        return userService.change_password(userid, role, MD5Util.crypt(oldpsd), MD5Util.crypt(newpsd));
     }
 
     @ResponseBody

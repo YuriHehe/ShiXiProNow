@@ -128,13 +128,13 @@
   <select id="selectNum" resultType="int">
     select count(*) from student
   </select>
-  <select id="selectAll"  resultType="com.pro.ssm.model.Student">
+  <select id="selectAll"  resultMap="BaseResultMap">
     select * from student
   </select>
-  <select id="selectSome" resultType="com.pro.ssm.model.Student">
+  <select id="selectSome" resultMap="BaseResultMap">
     select * from student limit #{start_id},#{num}
   </select>
-  <select id="selectBySearch" resultType="com.pro.ssm.model.Student">
+  <select id="selectBySearch" resultMap="BaseResultMap">
     select * from student where (sid like '%${key}%') or (sname like '%${key}%');
   </select>
 </mapper>

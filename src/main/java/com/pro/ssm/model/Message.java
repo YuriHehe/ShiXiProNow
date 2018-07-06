@@ -1,5 +1,7 @@
 package com.pro.ssm.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import java.util.Date;
 
 public class Message {
@@ -27,6 +29,7 @@ public class Message {
         this.sid = sid == null ? null : sid.trim();
     }
 
+    @JsonFormat(pattern="MM-dd HH:mm",timezone = "GMT+8")
     public Date getCreateTime() {
         return createTime;
     }
@@ -35,6 +38,7 @@ public class Message {
         this.createTime = createTime;
     }
 
+    @JsonFormat(pattern="MM-dd HH:mm",timezone = "GMT+8")
     public Date getReplyTime() {
         return replyTime;
     }
