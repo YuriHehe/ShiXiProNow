@@ -82,7 +82,7 @@ public class AppController {
 
     @ResponseBody
     @RequestMapping(value = "/login", method = RequestMethod.POST)
-    public Map<String, Object> login(HttpServletRequest request, Model model) {
+    public Map<String, Object> login(HttpServletRequest request) {
         String userid = request.getParameter("userid");
         String password = request.getParameter("password");
         String role = request.getParameter("role");
