@@ -10,7 +10,7 @@ public interface MyTeacherDao {
 
     List<ClassTable> getCourseList(@Param("teacher_id") String teacher_id, @Param("start") int start ,@Param("n") int n);
 
-    List<CourseDetailInfo> getCourseDetail(@Param("cid") Integer cid);
+    CourseDetailInfo getCourseDetail(@Param("cid") Integer cid);
 
     List<ClsInfo> getTeacherClass(@Param("tid") String tid, @Param("start") int start, @Param("n") int n);
 

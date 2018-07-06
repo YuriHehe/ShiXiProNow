@@ -83,20 +83,18 @@
     -->
     <select id="getStuAvailableCourseByStuid" resultType="com.pro.ssm.model.custom.CourseInfo" parameterType="map">
         select
-            cls.cid,
+            course.cid,
             course.cname    as name,
-            teacher.tname   as teacher,
             departmet.dname as department,
             course.credit,
-            course.hour
+            course.hour,
+            count(*) as class_num
         from cls
-            join course
-            join teacher
-            join departmet
-            join student
-                on cls.cid = course.cid and cls.tid = teacher.tid and course.did = student.did and
-                   course.did = departmet.did
+            join course on cls.cid = course.cid
+            join departmet on course.did = departmet.did
+            join student on course.did = student.did
         where student.sid = #{stuid,jdbcType=CHAR}
+        group by course.cid
     </select>
 
     <!--#### 查询教师开设的教学班
@@ -196,11 +194,9 @@
             stu_cls.usual_grade,
             stu_cls.final_grade,
             stu_cls.create_time as grade_time
-        from stu_cls
-            join cls
-            join course
+        from stu_cls join cls on stu_cls.clsid = cls.clsid
+            join course on cls.cid = course.cid
             join teacher t on cls.tid = t.tid
-                              and stu_cls.clsid = cls.clsid and cls.cid = course.cid
         where stu_cls.sid = #{stuid,jdbcType=CHAR}
         limit 0, 10
     </select>
@@ -252,12 +248,9 @@
             schedule.start_session,
             schedule.end_session,
             schedule.address
-        from cls
-            join course
-            join schedule
-            join teacher
-                on cls.cid = course.cid and schedule.clsid = cls.clsid
-                   and teacher.tid = cls.tid
+        from cls join course on cls.cid = course.cid
+            join schedule on schedule.clsid = cls.clsid
+            join teacher on teacher.tid = cls.tid
         where cls.clsid = #{clsid,jdbcType=INTEGER}
     </select>
 

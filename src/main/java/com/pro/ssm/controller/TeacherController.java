@@ -106,9 +106,9 @@ public class TeacherController {
         return Msg.Success("成功获取信息", tmp);
     }
 
-    /*教师列表*/
+    /*教师课程列表*/
     @ResponseBody
-    @RequestMapping(value = "/course/list", method = RequestMethod.POST)
+    @RequestMapping(value = "/course/list", method = RequestMethod.GET)
     public Map<String, Object> courseList(HttpSession session, @RequestParam("start") int start, @RequestParam("n") int n) {
         String tid = (String) session.getAttribute("userid");
         return Msg.Success(iteacherDao.getCourseList(tid, start, n));
@@ -127,8 +127,7 @@ public class TeacherController {
     @ResponseBody
     @RequestMapping(value = "/course/info", method = RequestMethod.GET)
     public Map<String, Object> course_info(@RequestParam("cid") int cid, HttpSession session) {
-        List<CourseDetailInfo> res = iteacherDao.getCourseDetail(cid);
-        return Msg.Success(res);
+        return Msg.Success(iteacherDao.getCourseDetail(cid));
     }
 
     /*教师课表信息*/
@@ -215,11 +214,11 @@ public class TeacherController {
     @RequestMapping(value = "/commit_grade", method = RequestMethod.POST, consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
     public Map<String, Object> commit_grade(HttpSession session, HttpEntity<String> httpEntity) {
         String tid = (String) session.getAttribute("userid");
+        System.out.println(httpEntity.getBody());
         JSONObject json = JSON.parseObject(httpEntity.getBody()); //反序列化
         Cls cls = clsDao.selectByPrimaryKey(json.getInteger("cls_id"));
         if (cls == null || !(cls.getTid().equals(tid)))
             return Msg.Error("教学班不存在或者您不是教学班的任课教师");
-
 
         StuClsKey k = new StuClsKey();
         k.setClsid(json.getInteger("cls_id"));

@@ -25,12 +25,12 @@ public class CourseServiceImpl implements CourseService {
     public boolean delCsById(int userid) {
         if(courseDao.selectByPrimaryKey(userid)==null)return false;
         courseDao.deleteByPrimaryKey(userid);
-        return false;
+        return true;
     }
 
     public boolean updateCs(Course cs) {
         if(courseDao.selectByPrimaryKey(cs.getCid())==null)return false;
         courseDao.updateByPrimaryKeySelective(cs);
-        return false;
+        return true;
     }
 }

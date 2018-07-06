@@ -25,11 +25,13 @@
         select
             departmet.did,
             departmet.dname,
-            count(course.cid) as course_num,
-            sum(cls.capacity) as capacity,
+            count(course.cid)  as course_num,
+            sum(cls.capacity)  as capacity,
             sum(cls.chose_num) as chose_num
-        from departmet left join
-            (course join cls)
+        from departmet
+            left join
+            (course
+                join cls)
                 on cls.cid = course.cid and course.did = departmet.did
         group by departmet.did
     </select>
@@ -71,27 +73,25 @@
     <select id="getDeptCourseGrade" resultMap="CourseDetailInfoMap" parameterType="map">
         select
             course.cid,
-            course.cname    as name,
+            course.cname             as name,
             course.credit,
             course.hour,
 
-            cls.clsid       as class_id,
+            cls.clsid                as class_id,
             cls.term,
             cls.capacity,
             cls.chose_num,
-            teacher.tname   as teacher,
+            teacher.tname            as teacher,
 
             avg(stu_cls.usual_grade) as avg_usual_grade,
             avg(stu_cls.usual_grade) as avg_final_grade
-        from cls
-            join course
-            join teacher
-            join departmet
-            join stu_cls
-                on cls.cid = course.cid and cls.tid = teacher.tid
-                   and course.did = departmet.did and stu_cls.clsid = cls.clsid
+        from
+            course inner join cls on cls.cid = course.cid
+            left join teacher on cls.tid = teacher.tid
+            inner join departmet on course.did = departmet.did
+                left join stu_cls on stu_cls.clsid = cls.clsid
         where departmet.did = #{did,jdbcType=INTEGER}
-        group by stu_cls.clsid
+        group by cls.clsid
     </select>
 
 

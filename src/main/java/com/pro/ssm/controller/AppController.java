@@ -116,14 +116,17 @@ public class AppController {
                 res = Msg.Error("不存在用户名");
             } else if (password.equals(tmp.getPassword())) {
                 res = Msg.Success("成功", null);
-                username =tmp.getTname();
+                username = tmp.getTname();
             } else {
                 res = Msg.Error("错误密码");
             }
         } else {
             res = Msg.Error("错误的用户类型");
         }
-        res.put("user_name",username);
+        HashMap<String, String> data = new HashMap<String, String>();
+        data.put("user_name", username);
+        res.put("data", data);
+
 
         if (res.get("code").equals(200)) {
             request.getSession().setAttribute("login", "1");

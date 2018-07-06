@@ -1,7 +1,10 @@
 package com.pro.ssm.controller;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.pro.ssm.dao.*;
 import com.pro.ssm.model.custom.CourseDetailInfo;
+import com.pro.ssm.model.custom.CourseInfo;
 import com.pro.ssm.model.custom.GradeBase;
 import com.pro.ssm.model.custom.extra.Classes;
 import com.pro.ssm.util.BeanUtil;
@@ -10,13 +13,16 @@ import com.pro.ssm.util.MD5Util;
 import com.pro.ssm.util.Msg;
 import com.pro.ssm.model.*;
 import com.pro.ssm.service.*;
+import org.springframework.http.HttpEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
@@ -26,6 +32,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 @Controller
 @CrossOrigin(maxAge = 3600)
@@ -56,6 +64,21 @@ public class AdminController {
     private ScheduleMapper scheduleDao;
     @Resource
     private SettingsMapper settingDao;
+    @Resource
+    private CourseMapper courseDao;
+
+    /*通过学院名获取学院id*/
+    private int getDeptId(String dept_name) {
+
+        List<Departmet> dids = departmetDao.selectAll();
+        int did = -1;
+        for (Departmet d : dids) {
+            if (d.getDname().equals(dept_name)) {
+                return d.getDid();
+            }
+        }
+        return -1;
+    }
 
     @ResponseBody
     @RequestMapping(value = "/base_info", method = RequestMethod.GET)
@@ -163,16 +186,10 @@ public class AdminController {
             @RequestParam("class") String class_name,
             @RequestParam("password") String pwd
     ) {
-        List<Departmet> dids = departmetDao.selectAll();
-        int did = -1;
-        for (Departmet d : dids) {
-            if (d.getDname().equals(dname)) {
-                did = d.getDid();
-                break;
-            }
-        }
+        int did = getDeptId(dname);
         if (did == -1)
-            did = 1;
+            return Msg.Error("学院不存在");
+
         Student stu = new Student();
         stu.setSid(stu_id);
         stu.setSname(name);
@@ -203,16 +220,9 @@ public class AdminController {
             @RequestParam("class") String class_name,
             @RequestParam(value = "password", defaultValue = "") String pwd
     ) {
-        List<Departmet> dids = departmetDao.selectAll();
-        int did = -1;
-        for (Departmet d : dids) {
-            if (d.getDname().equals(dname)) {
-                did = d.getDid();
-                break;
-            }
-        }
+        int did = getDeptId(dname);
         if (did == -1)
-            did = 1;
+            return Msg.Error("学院不存在");
 
         Student stu = new Student();
         stu.setSid(stu_id);
@@ -270,12 +280,16 @@ public class AdminController {
     @ResponseBody
     @RequestMapping(value = "/teacher/add", method = RequestMethod.POST)
     public Map<String, Object> addTeacher(HttpServletRequest request, Model model) {
+        int did = getDeptId(request.getParameter("did"));
+        if (did == -1)
+            return Msg.Error("学院不存在");
+
         Teacher res = new Teacher();
         res.setTid(request.getParameter("tid"));
         res.setPassword(MD5Util.crypt(request.getParameter("password")));
         res.setTname(request.getParameter("name"));
         res.setTitle(request.getParameter("title"));
-        res.setDid(Integer.parseInt("1"));  // todo
+        res.setDid(did);
         res.setContact(request.getParameter("contact"));
         res.setAddress(request.getParameter("address"));
         boolean tag = teacherService.insertUser(res);
@@ -289,12 +303,16 @@ public class AdminController {
     @ResponseBody
     @RequestMapping(value = "/teacher/edit", method = RequestMethod.POST)
     public Map<String, Object> editTeacher(HttpServletRequest request, Model model) {
+        int did = getDeptId(request.getParameter("did"));
+        if (did == -1)
+            return Msg.Error("学院不存在");
+
         Teacher res = new Teacher();
         res.setTid(request.getParameter("tid"));
         res.setPassword(request.getParameter("password"));
         res.setTname(request.getParameter("name"));
         res.setTitle(request.getParameter("title"));
-        res.setDid(Integer.parseInt(request.getParameter("did")));
+        res.setDid(did);
         res.setContact(request.getParameter("contact"));
         res.setAddress(request.getParameter("address"));
         boolean tag = teacherService.updateUser(res);
@@ -379,8 +397,8 @@ public class AdminController {
     }
 
     @ResponseBody
-    @RequestMapping(value = "/course/add", method = RequestMethod.POST)
-    public Map<String, Object> addCourse(HttpServletRequest request, Model model) {
+    @RequestMapping(value = "/course/add_old", method = RequestMethod.POST)
+    public Map<String, Object> addCourseOld(HttpServletRequest request, Model model) {
         Course tmp = new Course();
         tmp.setCname(request.getParameter("name"));
         tmp.setDid(Integer.parseInt(request.getParameter("did")));
@@ -393,6 +411,65 @@ public class AdminController {
         } else {
             return Msg.Error("课程已经存在");
         }
+    }
+
+    @ResponseBody
+    @Transactional
+    @RequestMapping(value = "/course/add", method = RequestMethod.POST, consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
+    public Map<String, Object> addCourse(HttpEntity<String> httpEntity) {
+        System.out.println(httpEntity.getBody());
+        JSONObject json = JSON.parseObject(httpEntity.getBody()); //反序列化
+
+        int did = getDeptId(json.getString("department"));
+        if(did==-1)
+            return Msg.Error("学院不存在！");
+
+        Course course = new Course();
+        course.setCname(json.getString("name"));
+        course.setDid(did);
+        course.setCredit(new BigDecimal(json.getString("credit")));
+        course.setHour(json.getInteger("hour"));
+        courseDao.insertSelective(course);
+
+        for(Object cls_obj:json.getJSONArray("class")){
+            JSONObject cls_json = (JSONObject) cls_obj;
+            Cls cls = new Cls();
+            cls.setCid(course.getCid());
+            cls.setChoseNum(0);
+            cls.setCapacity(cls_json.getInteger("capacity"));
+            cls.setTerm(cls_json.getString("term"));
+            clsDao.insertSelective(cls);
+
+            for(Object schdule_obj:cls_json.getJSONArray("schedule")){
+                JSONObject schedule_json = (JSONObject) schdule_obj;
+
+                String week_range = schedule_json.getString("week_range");
+                String time_range = schedule_json.getString("time_range");
+                int week_delim_pos = week_range.indexOf('-');
+                int time_delim_pos = time_range.indexOf('-');
+                if (week_delim_pos == -1 || time_delim_pos == -1)
+                    return Msg.Error("week_range或time_range格式不对");
+
+                int start_week = Integer.parseInt(week_range.substring(0, week_delim_pos)),
+                        end_week = Integer.parseInt(week_range.substring(week_delim_pos + 1)),
+                        start_session = Integer.parseInt(time_range.substring(0, time_delim_pos)),
+                        end_session = Integer.parseInt(time_range.substring(time_delim_pos + 1));
+
+                if (start_week < 1 || end_week < start_week || start_session < 1 || end_session < start_session)
+                    return Msg.Error("week_range或time_range内容不合法");
+
+                Schedule s = new Schedule();
+                s.setClsid(cls.getClsid());
+                s.setAddress(schedule_json.getString("address"));
+                s.setStartWeek(start_week);
+                s.setEndWeek(end_week);
+                s.setStartSession(start_session);
+                s.setEndSession(end_session);
+                s.setDay(schedule_json.getInteger("day"));
+                scheduleDao.insertSelective(s);
+            }
+        }
+        return Msg.Success();
     }
 
     @ResponseBody
@@ -415,11 +492,10 @@ public class AdminController {
 
     @ResponseBody
     @RequestMapping(value = "/course/del", method = RequestMethod.POST)
-    public Map<String, Object> delCourse(HttpServletRequest request, Model model) {
-        String id = request.getParameter("cid");
-        boolean tag = courseService.delCsById(Integer.parseInt(id));
-        if (tag == true) {
-            return Msg.Success("成功删除课程", null);
+    public Map<String, Object> delCourse(@RequestParam("key") int cid) {
+        int affected_row = courseDao.deleteByPrimaryKey(cid);
+        if (affected_row == 1) {
+            return Msg.Success("成功删除课程");
         } else {
             return Msg.Error("课程不存在");
         }
@@ -427,7 +503,7 @@ public class AdminController {
 
     /*课程搜索 by wang*/
     @ResponseBody
-    @RequestMapping(value = "/course/search", method = RequestMethod.POST)  // TODO POST
+    @RequestMapping(value = "/course/search", method = RequestMethod.POST)
     public Map<String, Object> searchCourse(@RequestParam("key") String key) {
         return Msg.Success(iadminDao.searchCourseList(key));
     }

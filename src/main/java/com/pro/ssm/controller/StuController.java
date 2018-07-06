@@ -171,6 +171,7 @@ public class StuController {
     @RequestMapping(value = "/del_class", method = RequestMethod.POST)
     public Map<String, Object> del_class(@RequestParam("class_id") int class_id, HttpSession session) {
         String stuid = (String) session.getAttribute("userid");
+        // 教学班人数减一
         Cls cls = clsDao.selectByPrimaryKey(class_id);
         cls.setChoseNum(cls.getChoseNum()-1);
         clsDao.updateByPrimaryKeySelective(cls);

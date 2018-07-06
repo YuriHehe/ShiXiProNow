@@ -9,12 +9,10 @@
             course.credit,
             course.hour,
             count(course.cid) as class_num
-        from cls
-            join course
-            join teacher
-            join departmet
-                on cls.cid = course.cid and departmet.did = teacher.did
-                   and course.did = departmet.did
+        from
+            course left join cls on cls.cid = course.cid
+            join departmet on course.did = departmet.did
+            join teacher on departmet.did = teacher.did
         where teacher.tid = #{teacher_id,jdbcType=CHAR}
         group by course.cid
         limit #{start,jdbcType=INTEGER}, #{n,jdbcType=INTEGER}
@@ -28,12 +26,10 @@
             course.credit,
             course.hour,
             count(course.cid) as class_num
-        from cls
-            join course
-            join teacher
-            join departmet
-                on cls.cid = course.cid and departmet.did = teacher.did
-                   and course.did = departmet.did
+        from
+            course left join cls on cls.cid = course.cid
+            join departmet on course.did = departmet.did
+            join teacher on departmet.did = teacher.did
         where teacher.tid = #{teacher_id,jdbcType=CHAR} and
               (course.cid = #{key,jdbcType=CHAR} or course.cname like '%${key}%')
         group by course.cid
@@ -82,13 +78,10 @@
             schedule.start_session,
             schedule.end_session,
             schedule.address
-        from cls
-            join course
-            join teacher
-            join departmet
-            join schedule
-                on cls.cid = course.cid and cls.tid = teacher.tid
-                   and course.did = departmet.did and schedule.clsid = cls.clsid
+        from (course inner join departmet on course.did = departmet.did )
+            left join
+            ((cls left join schedule on schedule.clsid = cls.clsid) left join teacher on cls.tid = teacher.tid)
+            on  cls.cid = course.cid
         where course.cid = #{cid,jdbcType=INTEGER}
     </select>
 
