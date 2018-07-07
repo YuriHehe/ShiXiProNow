@@ -103,5 +103,6 @@
   </update>
   <select id="selectNum" resultType="int">
     select count(*) from cls
+      join settings on settings.svalue = cls.term and settings.skey = "term"
   </select>
 </mapper>

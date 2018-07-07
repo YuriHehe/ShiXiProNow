@@ -97,6 +97,7 @@
     select * from course limit #{start_id},#{num}
   </select>
   <select id="selectBySearch" resultType="com.pro.ssm.model.Course">
-    select * from course where (cid like '%${key}%') or (cname like '%${key}%')
+    select * from course
+    where (cid like '%${key}%') or (cname like '%${key}%')
   </select>
 </mapper>

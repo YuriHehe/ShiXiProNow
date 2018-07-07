@@ -11,6 +11,7 @@
             count(course.cid) as class_num
         from
             course left join cls on cls.cid = course.cid
+            join settings on settings.svalue = cls.term and settings.skey = "term"
             join departmet on course.did = departmet.did
             join teacher on departmet.did = teacher.did
         where teacher.tid = #{teacher_id,jdbcType=CHAR}
@@ -28,6 +29,7 @@
             count(course.cid) as class_num
         from
             course left join cls on cls.cid = course.cid
+            join settings on settings.svalue = cls.term and settings.skey = "term"
             join departmet on course.did = departmet.did
             join teacher on departmet.did = teacher.did
         where teacher.tid = #{teacher_id,jdbcType=CHAR} and
@@ -98,6 +100,7 @@
             cls.capacity,
             cls.chose_num
         from cls
+            join settings on settings.svalue = cls.term and settings.skey = "term"
             join course
             join teacher
             join departmet
@@ -129,6 +132,7 @@
             schedule.end_session,
             schedule.address
         from cls
+            join settings on settings.svalue = cls.term and settings.skey = "term"
             join course
             join teacher
             join schedule

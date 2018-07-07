@@ -11,11 +11,10 @@
             course.hour,
             count(course.cid) as class_num
         from cls
-            join course
-            join teacher
-            join departmet
-                on cls.cid = course.cid and departmet.did = teacher.did
-                   and course.did = departmet.did
+            join settings on settings.svalue = cls.term and settings.skey = "term"
+            join course on cls.cid = course.cid
+            join departmet on course.did = departmet.did
+            join teacher on departmet.did = teacher.did
         where (course.cid = #{key,jdbcType=CHAR} or course.cname like '%${key}%')
         group by course.cid
     </select>
@@ -33,6 +32,7 @@
             (course
                 join cls)
                 on cls.cid = course.cid and course.did = departmet.did
+            join settings on settings.svalue = cls.term and settings.skey = "term"
         group by departmet.did
     </select>
 
@@ -45,9 +45,9 @@
             course.hour,
             count(course.cid) as class_num
         from cls
-            join course
-            join departmet
-                on cls.cid = course.cid and course.did = departmet.did
+            join settings on settings.svalue = cls.term and settings.skey = "term"
+            join course on cls.cid = course.cid
+            join departmet on course.did = departmet.did
         group by course.cid
         limit #{start,jdbcType=INTEGER}, #{n,jdbcType=INTEGER}
     </select>
@@ -86,10 +86,13 @@
             avg(stu_cls.usual_grade) as avg_usual_grade,
             avg(stu_cls.usual_grade) as avg_final_grade
         from
-            course inner join cls on cls.cid = course.cid
-                inner join teacher on cls.tid = teacher.tid
+            course
+            inner join cls on cls.cid = course.cid
+                inner join settings on settings.svalue = cls.term and settings.skey = "term"
+            inner join teacher on cls.tid = teacher.tid
             inner join departmet on course.did = departmet.did
-                left join stu_cls on stu_cls.clsid = cls.clsid
+            left join stu_cls on stu_cls.clsid = cls.clsid
+
         where departmet.did = #{did,jdbcType=INTEGER}
         group by cls.clsid
     </select>

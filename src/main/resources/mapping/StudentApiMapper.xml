@@ -21,6 +21,7 @@
             schedule.end_session,
             schedule.address
         from cls
+            join settings on settings.svalue = cls.term and settings.skey = "term"
             join course
             join stu_cls
             join teacher
@@ -90,6 +91,7 @@
             course.hour,
             count(*) as class_num
         from cls
+            join settings on settings.svalue = cls.term and settings.skey = "term"
             join course on cls.cid = course.cid
             join departmet on course.did = departmet.did
             join student on course.did = student.did
@@ -124,6 +126,7 @@
             course.credit,
             course.hour
         from cls
+            join settings on settings.svalue = cls.term and settings.skey = "term"
             join course
             join teacher
             join departmet
