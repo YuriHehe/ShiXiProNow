@@ -21,13 +21,13 @@
     delete from course
     where cid = #{cid,jdbcType=INTEGER}
   </delete>
-  <insert id="insert" parameterType="com.pro.ssm.model.Course" >
+  <insert id="insert" parameterType="com.pro.ssm.model.Course" useGeneratedKeys="true" keyProperty="cid">
     insert into course (cid, did, cname, 
       credit, hour)
     values (#{cid,jdbcType=INTEGER}, #{did,jdbcType=INTEGER}, #{cname,jdbcType=CHAR}, 
       #{credit,jdbcType=DECIMAL}, #{hour,jdbcType=INTEGER})
   </insert>
-  <insert id="insertSelective" parameterType="com.pro.ssm.model.Course" >
+  <insert id="insertSelective" parameterType="com.pro.ssm.model.Course"  useGeneratedKeys="true"  keyProperty="cid">
     insert into course
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="cid != null" >

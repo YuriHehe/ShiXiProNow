@@ -33,7 +33,7 @@
       and start_session = #{startSession,jdbcType=INTEGER}
       and end_session = #{endSession,jdbcType=INTEGER}
   </delete>
-  <insert id="insert" parameterType="com.pro.ssm.model.Schedule" >
+  <insert id="insert" parameterType="com.pro.ssm.model.Schedule">
     insert into schedule (clsid, start_week, end_week, 
       day, start_session, end_session, 
       address)
@@ -41,7 +41,7 @@
       #{day,jdbcType=INTEGER}, #{startSession,jdbcType=INTEGER}, #{endSession,jdbcType=INTEGER}, 
       #{address,jdbcType=CHAR})
   </insert>
-  <insert id="insertSelective" parameterType="com.pro.ssm.model.Schedule" >
+  <insert id="insertSelective" parameterType="com.pro.ssm.model.Schedule">
     insert into schedule
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="clsid != null" >

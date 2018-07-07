@@ -87,7 +87,7 @@
             avg(stu_cls.usual_grade) as avg_final_grade
         from
             course inner join cls on cls.cid = course.cid
-            left join teacher on cls.tid = teacher.tid
+                inner join teacher on cls.tid = teacher.tid
             inner join departmet on course.did = departmet.did
                 left join stu_cls on stu_cls.clsid = cls.clsid
         where departmet.did = #{did,jdbcType=INTEGER}

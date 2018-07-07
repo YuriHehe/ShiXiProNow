@@ -23,13 +23,13 @@
     where clsid = #{clsid,jdbcType=INTEGER}
       and sid = #{sid,jdbcType=CHAR}
   </delete>
-  <insert id="insert" parameterType="com.pro.ssm.model.StuCls" >
+  <insert id="insert" parameterType="com.pro.ssm.model.StuCls"  useGeneratedKeys="true">
     insert into stu_cls (clsid, sid, final_grade,
       usual_grade, create_time)
     values (#{clsid,jdbcType=INTEGER}, #{sid,jdbcType=CHAR}, #{finalGrade,jdbcType=DECIMAL},
       #{usualGrade,jdbcType=DECIMAL}, #{createTime,jdbcType=TIMESTAMP})
   </insert>
-  <insert id="insertSelective" parameterType="com.pro.ssm.model.StuCls" >
+  <insert id="insertSelective" parameterType="com.pro.ssm.model.StuCls"  useGeneratedKeys="true"  keyProperty="clsid">
     insert into stu_cls
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="clsid != null" >

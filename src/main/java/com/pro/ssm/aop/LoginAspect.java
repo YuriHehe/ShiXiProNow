@@ -29,30 +29,6 @@ public class LoginAspect {
     @Pointcut(value = "execution(* com.pro.ssm.controller.TeacherController.*(..))")
     public void loginCheckTeacher(){}
 
-    @Pointcut(value = "execution(* com.pro.ssm.controller.AppController.*(..))")
-    public void loginCheckUser(){}
-
-    @Around("loginCheckUser()")
-    public Object loginUser(ProceedingJoinPoint joinPoint) throws Throwable {
-        //放行testLogin和Login函数
-        String method = joinPoint.getSignature().getName();
-        if(method.equals("login") || method.equals("testLogin")){
-            return joinPoint.proceed();
-        }
-
-        HttpServletRequest request = ((ServletRequestAttributes)RequestContextHolder.getRequestAttributes()).getRequest();
-        Object login = request.getSession().getAttribute("login");
-        if (login == null) {
-            return Msg.NotLoginError();
-        }
-        String sl = login.toString();
-        if(!sl.equals("1")){
-            return Msg.NotLoginError();
-        }
-        return joinPoint.proceed();
-    }
-
-
     @Around("loginCheckTeacher()")
     public Object loginTeacher(ProceedingJoinPoint joinPoint) throws Throwable {
         HttpServletRequest request = ((ServletRequestAttributes)RequestContextHolder.getRequestAttributes()).getRequest();

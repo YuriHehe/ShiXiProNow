@@ -13,6 +13,7 @@ import com.pro.ssm.util.MD5Util;
 import com.pro.ssm.util.Msg;
 import com.pro.ssm.model.*;
 import com.pro.ssm.service.*;
+import org.apache.commons.collections4.map.ListOrderedMap;
 import org.springframework.http.HttpEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
@@ -147,7 +148,7 @@ public class AdminController {
             tt.put("grade", i.getGrade());
             tt.put("start_year", i.getStartYear());
             tt.put("sex", i.getSex());
-            tt.put("class", i.getClass());
+            tt.put("class_name", i.getClass());
             tmp.add(tt);
         }
         return Msg.Success("成功搜索", tmp);
@@ -169,7 +170,7 @@ public class AdminController {
             res.put("grade", stu.getGrade());
             res.put("start_year", stu.getStartYear());
             res.put("sex", stu.getSex());
-            res.put("class", stu.getClass());
+            res.put("class_name", stu.getClsName());
             return Msg.Success("成功获取学生信息", res);
         }
     }
@@ -459,6 +460,7 @@ public class AdminController {
                     return Msg.Error("week_range或time_range内容不合法");
 
                 Schedule s = new Schedule();
+//                System.out.println(cls.getClsid());
                 s.setClsid(cls.getClsid());
                 s.setAddress(schedule_json.getString("address"));
                 s.setStartWeek(start_week);
@@ -691,15 +693,15 @@ public class AdminController {
         return Msg.Success(iteacherDao.getClassGradeList(clsid));
     }
 
-    static Map<String, String> department_grade_map = new HashMap<String, String>() {
+    static Map<String, String> department_grade_map = new ListOrderedMap<String, String>() {
         {
+            put("term", "学期");
             put("cid", "课程id");
             put("name", "课程名称");
             put("credit", "学分");
             put("hour", "学分");
             put("class_id", "教学班id");
             put("teacher", "教师姓名");
-            put("term", "学期");
             put("chose_num", "班级人数");
             put("avg_usual_grade", "平均平时成绩");
             put("avg_final_grade", "平均平时成绩");
@@ -749,7 +751,7 @@ public class AdminController {
         return Msg.Success(grade_maps);
     }
 
-    static Map<String, String> class_grade_map = new HashMap<String, String>() {
+    static Map<String, String> class_grade_map = new ListOrderedMap<String, String>() {
         {
             put("stuid", "学生ID");
             put("name", "学生姓名");

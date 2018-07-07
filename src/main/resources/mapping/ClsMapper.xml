@@ -22,13 +22,13 @@
     delete from cls
     where clsid = #{clsid,jdbcType=INTEGER}
   </delete>
-  <insert id="insert" parameterType="com.pro.ssm.model.Cls">
+  <insert id="insert" parameterType="com.pro.ssm.model.Cls" useGeneratedKeys="true" keyProperty="clsid">
     insert into cls (clsid, capacity, chose_num, 
       tid, cid, term)
     values (#{clsid,jdbcType=INTEGER}, #{capacity,jdbcType=INTEGER}, #{choseNum,jdbcType=INTEGER}, 
       #{tid,jdbcType=CHAR}, #{cid,jdbcType=INTEGER}, #{term,jdbcType=CHAR})
   </insert>
-  <insert id="insertSelective" parameterType="com.pro.ssm.model.Cls">
+  <insert id="insertSelective" parameterType="com.pro.ssm.model.Cls" useGeneratedKeys="true"  keyProperty="clsid">
     insert into cls
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="clsid != null">
