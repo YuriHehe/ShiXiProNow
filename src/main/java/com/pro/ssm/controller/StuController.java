@@ -145,10 +145,14 @@ public class StuController {
     public Map<String, Object> commit_class(@RequestParam("class_id") int class_id, HttpSession session) {
         String stuid = (String) session.getAttribute("userid");
         Cls cls = clsDao.selectByPrimaryKey(class_id);
-        if(cls.getChoseNum()>=cls.getCapacity()){
+        if (cls.getChoseNum() >= cls.getCapacity()) {
             return Msg.Error("选课人数已满");
         }
-        cls.setChoseNum(cls.getChoseNum()+1);
+        if (istuDao.isStuSelThisCourse(stuid, cls.getCid()) != 0) {
+            return Msg.Error("您已经选过该课程！");
+        }
+
+        cls.setChoseNum(cls.getChoseNum() + 1);
         clsDao.updateByPrimaryKeySelective(cls);
 
         StuCls stucls = new StuCls();
@@ -173,7 +177,7 @@ public class StuController {
         String stuid = (String) session.getAttribute("userid");
         // 教学班人数减一
         Cls cls = clsDao.selectByPrimaryKey(class_id);
-        cls.setChoseNum(cls.getChoseNum()-1);
+        cls.setChoseNum(cls.getChoseNum() - 1);
         clsDao.updateByPrimaryKeySelective(cls);
 
         StuClsKey key = new StuClsKey();

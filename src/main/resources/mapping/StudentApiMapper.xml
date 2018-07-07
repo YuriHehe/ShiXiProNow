@@ -257,4 +257,10 @@
         where cls.clsid = #{clsid,jdbcType=INTEGER}
     </select>
 
+    <select id="isStuSelThisCourse"  parameterType="map" resultType="int">
+        select count(*)
+        from stu_cls join cls on stu_cls.clsid = cls.clsid
+        join course on cls.cid = course.cid
+        where stu_cls.sid=#{sid,jdbcType=CHAR} and course.cid=#{cid,jdbcType=INTEGER}
+    </select>
 </mapper>

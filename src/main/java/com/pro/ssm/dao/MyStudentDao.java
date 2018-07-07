@@ -20,4 +20,6 @@ public interface MyStudentDao {
     List<GradeInfo> getStuGrade(@Param("stuid") String stuid);
 
     List<Classes> getClsDetail(@Param("clsid") int clsid);
+
+    int isStuSelThisCourse(@Param("sid") String sid, @Param("cid") int cid);
 }
